@@ -8,6 +8,9 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "PluginEditor.cpp"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 //==============================================================================
 DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
@@ -77,23 +80,26 @@ int DistortionPluginAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void DistortionPluginAudioProcessor::setCurrentProgram (int index)
+void DistortionPluginAudioProcessor::setCurrentProgram (int)
 {
+	//Do Nothing
 }
 
-const juce::String DistortionPluginAudioProcessor::getProgramName (int index)
+const juce::String DistortionPluginAudioProcessor::getProgramName (int)
 {
-    return {};
+	return {};
 }
 
-void DistortionPluginAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void DistortionPluginAudioProcessor::changeProgramName (int , const juce::String&)
 {
+	//Do Nothing
 }
 
 //==============================================================================
-void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void DistortionPluginAudioProcessor::prepareToPlay (double , int)
 {
-    // Use this method as the place to do any pre-playback
+
+	// Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
 
@@ -129,7 +135,7 @@ bool DistortionPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& 
 }
 #endif
 
-void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -144,21 +150,66 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
+	// Interate through the channels
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+		// Channel Data used to write to buffer
+		auto *channelData = buffer.getWritePointer(channel);
 
-        // ..do something to the data...
-    }
+		// interates through Samples
+		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample) {
+			
+			/* Implement Mix function in this loop */
+
+			//float cleansig = *channelData;
+			
+			*channelData = OptionChange(channelData);
+			
+			//*channelData = ((((2.f / M_PI)* atan(*channelData)*wet))+(cleansig*(1.f/wet))); // Waveshaping distortion
+			
+			*channelData *= mGainValue;	// Output Volume
+			
+			channelData++;				// Interate through next sample
+		}
+	}
+}
+float DistortionPluginAudioProcessor::OptionChange(float *channelData)
+{
+	// Switch Statement used to change the type of distortion algorithm
+
+	switch (switchOptions)			// Take value of Item Selected
+	{
+	default:									// Print is holder until DSP implemnted
+	case 1:
+		// Waveshapping algorithm
+		*channelData *= mDrive; // Multiplying input data 
+		*channelData = (float)((2.f / M_PI)* atan(*channelData)); //using waveshapping on the input data
+
+		break;				
+
+	case 2: 
+		//HardClipping
+		*channelData *= mDrive; //Multiplying input data
+		// Hardclipping distortion
+		if (*channelData > 0.7) {
+			*channelData = 1;
+		}
+		if (*channelData < -0.7) {
+			*channelData = -1;
+		}
+
+		break;
+
+	case 3:
+		// Sine Algorithm
+		*channelData = std::sin(mDrive**channelData); // using sine on input data
+
+		break;
+
+	}
+	return *channelData;
 }
 
-//==============================================================================
 bool DistortionPluginAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -170,14 +221,14 @@ juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
 }
 
 //==============================================================================
-void DistortionPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void DistortionPluginAudioProcessor::getStateInformation (juce::MemoryBlock&)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void DistortionPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void DistortionPluginAudioProcessor::setStateInformation (const void*, int)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
