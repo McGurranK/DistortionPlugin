@@ -29,7 +29,7 @@ public:
    #endif
 
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
-
+	
     //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
@@ -52,9 +52,12 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+	float OptionChange(float *channelData);
+
 	float mDrive{ 1 };
 	float mGainValue{ 1 };
 	float wet{ 0.5 };
+	int switchOptions{ 1 };
 
 private:
     //==============================================================================

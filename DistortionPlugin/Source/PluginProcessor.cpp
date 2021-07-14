@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "PluginEditor.cpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -153,25 +154,62 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
 		// Channel Data used to write to buffer
-		auto* channelData = buffer.getWritePointer(channel);
+		auto *channelData = buffer.getWritePointer(channel);
 
 		// interates through Samples
 		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample) {
 			
-			float cleansig = *channelData;
+			/* Implement Mix function in this loop */
+
+			//float cleansig = *channelData;
 			
-			*channelData *= mDrive;		// Multiples Channel Data by the drive parameter
+			*channelData = OptionChange(channelData);
 			
-			*channelData = ((((2.f / M_PI)* atan(*channelData)*wet))+(cleansig*(1.f/wet))); // Waveshaping distortion
+			//*channelData = ((((2.f / M_PI)* atan(*channelData)*wet))+(cleansig*(1.f/wet))); // Waveshaping distortion
 			
-			*channelData *= mGainValue;	// Volume
+			*channelData *= mGainValue;	// Output Volume
 			
 			channelData++;				// Interate through next sample
 		}
 	}
 }
+float DistortionPluginAudioProcessor::OptionChange(float *channelData)
+{
+	// Switch Statement used to change the type of distortion algorithm
 
-//==============================================================================
+	switch (switchOptions)			// Take value of Item Selected
+	{
+	default:									// Print is holder until DSP implemnted
+	case 1:
+		// Waveshapping algorithm
+		*channelData *= mDrive; // Multiplying input data 
+		*channelData = (float)((2.f / M_PI)* atan(*channelData)); //using waveshapping on the input data
+
+		break;				
+
+	case 2: 
+		//HardClipping
+		*channelData *= mDrive; //Multiplying input data
+		// Hardclipping distortion
+		if (*channelData > 0.7) {
+			*channelData = 1;
+		}
+		if (*channelData < -0.7) {
+			*channelData = -1;
+		}
+
+		break;
+
+	case 3:
+		// Sine Algorithm
+		*channelData = std::sin(mDrive**channelData); // using sine on input data
+
+		break;
+
+	}
+	return *channelData;
+}
+
 bool DistortionPluginAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
