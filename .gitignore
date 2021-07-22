@@ -126,3 +126,5 @@ DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/b
 DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/b24deca353c265b0/INCLUDE_JUCE_GRAPHICS.ipch
 DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/5f88367028c0bf50/INCLUDE_JUCE_GUI_BASICS.ipch
 DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/41afc7da514ada59/PLUGINPROCESSOR.ipch
+*.tlog
+*.log
