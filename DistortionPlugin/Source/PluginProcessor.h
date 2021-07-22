@@ -50,16 +50,17 @@ public:
     void changeProgramName (int index, const juce::String& newName) override;
 
     //==============================================================================
-    void getStateInformation (juce::MemoryBlock& destData) override;
+	void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 	float OptionChange(float *channelData);
-
-	float mDrive{ 1 };
-	float mGainValue{ 1 };
-	float wet{ 0.5 };
-	int switchOptions{ 1 };
+	int switchOptions;
 
 private:
+	juce::AudioParameterFloat* mGainParameter;
+	juce::AudioParameterFloat* mDriveParameter;
+	juce::AudioParameterFloat* mMixParameter;
+	juce::AudioParameterInt* mSwitchParameter;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
 };

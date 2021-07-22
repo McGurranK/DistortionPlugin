@@ -9,7 +9,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "PluginProcessor.h"
 
 //==============================================================================
 /**
@@ -25,27 +24,18 @@ public:
     void resized() override;
 	void OptionChangeEditor();
 
-	enum OptionBoxValues
-	{
-		Analogue = 1,
-		Hardclipper = 2,
-		Sinefold = 3
-		
-	};
-
-
 private:
-	void sliderValueChanged(juce::Slider*) override;
-	void comboBoxChanged(juce::ComboBox*);
+	void sliderValueChanged(juce::Slider* slider) override;
+	void comboBoxChanged(juce::ComboBox*) override;
 
-	juce::Slider Gain;			// Volume Slider
-	juce::Slider Mix;			// Wet/Dry Mix
-	juce::Slider Drive;			// Drive Control
-	juce::ComboBox Options;		// Option box with Types of distortion
+	juce::Slider GainSlider;			// Volume Slider
+	juce::Slider DriveSlider;			// Drive Control
+	juce::Slider MixSlider;				// Wet / Dry Mix
+	juce::ComboBox OptionsCombobox;		// Option box with Types of distortion
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     DistortionPluginAudioProcessor& audioProcessor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessorEditor)
+	//JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DistortionPluginAudioProcessorEditor);
 };

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="skbmTt" name="DistortionPlugin" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              cppLanguageStandard="17">
   <MAINGROUP id="RsCQxL" name="DistortionPlugin">
     <GROUP id="{D6B369B9-C447-CCD9-033D-CDFBF43F7978}" name="Source">
       <FILE id="oagmrt" name="PluginProcessor.cpp" compile="1" resource="0"
