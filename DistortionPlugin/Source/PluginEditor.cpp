@@ -19,24 +19,20 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 
 	// Gain control
 	addAndMakeVisible(GainSlider);															// Object made Visible
-	GainSlider.setSliderStyle(juce::Slider::SliderStyle::Rotary);							// Style Set to Rotary
-	GainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);	// No textbox
 	GainSlider.addListener(this);															// Setup as a listener
 	GainSlider.setRange(GainParameter->range.start, GainParameter->range.end,GainParameter->range.interval);				// Setting range the same as parameter in processor
 	GainSlider.setValue(*GainParameter);
+	GainSlider.onDragStart = [GainParameter] {GainParameter->beginChangeGesture(); };
+	GainSlider.onDragEnd = [GainParameter] {GainParameter->endChangeGesture(); };
 
 	// Wet and Dry Mix Control
-	MixSlider.setSliderStyle(juce::Slider::SliderStyle::Rotary);							// Style Set to Rotary
 	addAndMakeVisible(MixSlider);															// Object made Visible
-	MixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
 	MixSlider.addListener(this);
 	MixSlider.setRange(MixParameter->range.start, MixParameter->range.end, MixParameter->range.interval);
 	MixSlider.setValue(*MixParameter);
 
 	// Drive Rotary
-	DriveSlider.setSliderStyle(juce::Slider::SliderStyle::Rotary); // Style Set to Rotary
 	addAndMakeVisible(DriveSlider);								   // Object made Visible
-	DriveSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
 	DriveSlider.addListener(this);
 	DriveSlider.setRange(DriveParameter->range.start, DriveParameter->range.end, DriveParameter->range.interval);
 	DriveSlider.setValue(*DriveParameter);
@@ -45,9 +41,7 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 	addAndMakeVisible(OptionsCombobox);							   // Making ComboBox visible
 	
 	// Adding Options to dropdown
-	OptionsCombobox.addItem("Analogue", 1);
-	OptionsCombobox.addItem("Hard Clipping", 2);
-	OptionsCombobox.addItem("Sine Fold", 3);
+	OptionsCombobox.addItemList(distortionTypes,1);
 	OptionsCombobox.onChange = [this] {OptionChangeEditor();};		   // Implementing switch function
 	OptionsCombobox.addListener(this);
 	OptionsCombobox.setSelectedId(*comboParameter);
