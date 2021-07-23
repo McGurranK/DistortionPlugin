@@ -24,7 +24,7 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
                        )
 #endif
 {	
-	addParameter(mGainParameter = new juce::AudioParameterFloat("gain","Gain",juce::NormalisableRange<float>(0.0f,1.0f),1.0f));
+	addParameter(mGainParameter = new juce::AudioParameterFloat("gain","Gain",juce::NormalisableRange<float>(0.0f,1.0f),1.f));
 	
 	addParameter(mDriveParameter = new juce::AudioParameterFloat("drive","Drive",1.0f,100.0f,1.0f));
 
@@ -239,12 +239,12 @@ void DistortionPluginAudioProcessor::setStateInformation (const void* data, int 
 {	
 	// XML file information
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
-	if (xmlState.get() != nullptr)			
+	//if (xmlState.get() != nullptr)			
 		if (xmlState->hasTagName("ParamTutorial"))
-			*mGainParameter = (float)xmlState->getDoubleAttribute("gain",1.0f);
-			*mDriveParameter = (float)xmlState->getDoubleAttribute("drive",1.0f);
-			*mMixParameter = (float)xmlState->getDoubleAttribute("mix",1.0f);
-			*mSwitchParameter = (int)xmlState->getDoubleAttribute("combo",1.0f);
+			*mGainParameter = (float)xmlState->getDoubleAttribute("gain",0.0f);
+			*mDriveParameter = (float)xmlState->getDoubleAttribute("drive",0.0f);
+			*mMixParameter = (float)xmlState->getDoubleAttribute("mix",0.0f);
+			*mSwitchParameter = (int)xmlState->getDoubleAttribute("combo",0.0f);
 
 }
 

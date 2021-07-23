@@ -94,10 +94,8 @@ void DistortionPluginAudioProcessorEditor::OptionChangeEditor()
 	auto& params = processor.getParameters();
 	juce::AudioParameterInt* comboParameter = (juce::AudioParameterInt*)params.getUnchecked(3);
 
-	switch (comboParameter->juce::AudioParameterInt::get())
+	switch (*comboParameter)
 	{
-	default:OptionsCombobox.setSelectedId(1); break;
-	
 	case 1:OptionsCombobox.setSelectedId(1); break;	
 	
 	case 2: OptionsCombobox.setSelectedId(2); break;
@@ -140,8 +138,9 @@ void  DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* sli
 	{
 
 		juce::AudioParameterFloat* GainParameter= (juce::AudioParameterFloat*)params.getUnchecked(0);
-		
-		*GainParameter = (float) GainSlider.getValue();
+
+			*GainParameter = (float)GainSlider.getValue();
+
 
 	} 
 	else if(slider == &DriveSlider) 
