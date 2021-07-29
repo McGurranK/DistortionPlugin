@@ -31,7 +31,7 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 	addParameter(mMixParameter= new juce::AudioParameterFloat("wet","wet", juce::NormalisableRange<float>(0.0f, 1.0f), 1.0f));
 
 	addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 1));
-
+	
 }
 
 DistortionPluginAudioProcessor::~DistortionPluginAudioProcessor()

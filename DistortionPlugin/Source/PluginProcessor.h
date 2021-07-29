@@ -55,6 +55,7 @@ public:
 	float OptionChange(float *channelData);
 	int switchOptions;
 
+
 private:
 	juce::AudioParameterFloat* mGainParameter;
 	juce::AudioParameterFloat* mDriveParameter;
