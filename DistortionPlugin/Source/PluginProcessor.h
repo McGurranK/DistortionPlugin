@@ -17,8 +17,8 @@ class DistortionPluginAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    DistortionPluginAudioProcessor();
-    ~DistortionPluginAudioProcessor() override;
+	DistortionPluginAudioProcessor();				// Processor Constructor
+    ~DistortionPluginAudioProcessor() override;		// Processor Destructor
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -57,11 +57,21 @@ public:
 
 
 private:
+	
+	// Initialise AudioProcessorValueTreeState as parameters
 	juce::AudioProcessorValueTreeState parameters;
-	std::atomic<float>* mGainParameter = nullptr;
-
-	juce::AudioParameterFloat* mDriveParameter;
-	juce::AudioParameterFloat* mMixParameter;
+	
+	// Atomic float varibles used to store value tree varibles.
+	// Gain Variable
+	std::atomic<float>* mGainParameter;	
+	
+	// Drive Parameter
+	std::atomic<float>* mDriveParameter;
+	
+	// Mix Variable
+	std::atomic<float>* mMixParameter;
+	
+	// Parameter for switching between algorithms
 	juce::AudioParameterInt* mSwitchParameter;
 
     //==============================================================================

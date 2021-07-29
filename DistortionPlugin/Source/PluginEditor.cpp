@@ -2,14 +2,14 @@
 #include "PluginEditor.h"
 
 
-DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor 
+(DistortionPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState (vts)
 
 {	
 	// Links to the plugin Processor
 	auto& params = processor.getParameters();
 
-	juce::AudioParameterFloat* DriveParameter = (juce::AudioParameterFloat*)params.getUnchecked(1);
 
 	juce::AudioParameterFloat* MixParameter = (juce::AudioParameterFloat*)params.getUnchecked(2);
 
@@ -17,19 +17,16 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 
 	// Gain control
 	addAndMakeVisible(GainSlider);															// Object made Visible
-	
+	gainAttachment.reset(new SliderAttachment(valueTreeState,"gain",GainSlider));
+
+	// Drive Control
+	addAndMakeVisible(DriveSlider);
+	driveAttachment.reset(new SliderAttachment(valueTreeState, "drive", DriveSlider));
 
 	// Wet and Dry Mix Control
-	addAndMakeVisible(MixSlider);															// Object made Visible
-	MixSlider.addListener(this);
-	MixSlider.setRange(MixParameter->range.start, MixParameter->range.end, MixParameter->range.interval);
-	MixSlider.setValue(*MixParameter);
+	addAndMakeVisible(MixSlider);									// Object made Visible
+	mixAttachment.reset(new SliderAttachment(valueTreeState, "mix", MixSlider));
 
-	// Drive Rotary
-	addAndMakeVisible(DriveSlider);								   // Object made Visible
-	DriveSlider.addListener(this);
-	DriveSlider.setRange(DriveParameter->range.start, DriveParameter->range.end, DriveParameter->range.interval);
-	DriveSlider.setValue(*DriveParameter);
 
 	// Combobox for changing distortion types
 	addAndMakeVisible(OptionsCombobox);							   // Making ComboBox visible
@@ -121,16 +118,7 @@ void  DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* sli
 	// creating a link to the processor
 	auto& params = processor.getParameters();
 
-
-	if(slider == &DriveSlider) 
-	{
-		
-		juce::AudioParameterFloat* DriveParameter = (juce::AudioParameterFloat*)params.getUnchecked(1);
-		
-		*DriveParameter = (float) DriveSlider.getValue();
-	
-	}
-	else if (slider == &MixSlider)
+	if (slider == &MixSlider)
 	{
 
 		juce::AudioParameterFloat* MixParameter = (juce::AudioParameterFloat*)params.getUnchecked(2);
