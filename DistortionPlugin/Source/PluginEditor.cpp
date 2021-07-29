@@ -9,8 +9,6 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 	// Links to the plugin Processor
 	auto& params = processor.getParameters();
 
-	juce::AudioParameterFloat* GainParameter = (juce::AudioParameterFloat*)params.getUnchecked(0);
-
 	juce::AudioParameterFloat* DriveParameter = (juce::AudioParameterFloat*)params.getUnchecked(1);
 
 	juce::AudioParameterFloat* MixParameter = (juce::AudioParameterFloat*)params.getUnchecked(2);
@@ -19,11 +17,7 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor (Dist
 
 	// Gain control
 	addAndMakeVisible(GainSlider);															// Object made Visible
-	GainSlider.addListener(this);															// Setup as a listener
-	GainSlider.setRange(GainParameter->range.start, GainParameter->range.end,GainParameter->range.interval);				// Setting range the same as parameter in processor
-	GainSlider.setValue(*GainParameter);
-	GainSlider.onDragStart = [GainParameter] {GainParameter->beginChangeGesture(); };
-	GainSlider.onDragEnd = [GainParameter] {GainParameter->endChangeGesture(); };
+	
 
 	// Wet and Dry Mix Control
 	addAndMakeVisible(MixSlider);															// Object made Visible
@@ -127,17 +121,8 @@ void  DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* sli
 	// creating a link to the processor
 	auto& params = processor.getParameters();
 
-	// Dectecting which slider has been changed and linking to the correct audio paramter in the prcoessor
-	if (slider == &GainSlider) 
-	{
 
-		juce::AudioParameterFloat* GainParameter= (juce::AudioParameterFloat*)params.getUnchecked(0);
-
-			*GainParameter = (float)GainSlider.getValue();
-
-
-	} 
-	else if(slider == &DriveSlider) 
+	if(slider == &DriveSlider) 
 	{
 		
 		juce::AudioParameterFloat* DriveParameter = (juce::AudioParameterFloat*)params.getUnchecked(1);

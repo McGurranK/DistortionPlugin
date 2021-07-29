@@ -24,7 +24,7 @@ public:
     void resized() override;
 	void OptionChangeEditor();
 	const juce::StringArray distortionTypes{"Analogue","Hardclipper","Sinefold" };
-
+	typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
 
 private:
@@ -33,6 +33,8 @@ private:
 	void comboBoxChanged(juce::ComboBox*) override;
 
 	juce::Slider GainSlider		{juce::Slider::Rotary,juce::Slider::NoTextBox};			// Volume Slider
+	std::unique_ptr<SliderAttachment> gainAttachment;
+
 	juce::Slider DriveSlider	{juce::Slider::Rotary,juce::Slider::NoTextBox};			// Drive Control
 	juce::Slider MixSlider		{juce::Slider::Rotary,juce::Slider::NoTextBox};			// Wet / Dry Mix
 	juce::ComboBox OptionsCombobox;	// Option box with Types of distortion

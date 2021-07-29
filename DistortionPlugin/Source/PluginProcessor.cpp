@@ -21,11 +21,11 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+	 ), parameters(*this, nullptr, juce::Identifier("AVTS"),{std::make_unique<juce::AudioParameterFloat>("gain","Gain",0.0f,1.0f,1.0f)})
 #endif
 {	
-	addParameter(mGainParameter = new juce::AudioParameterFloat("gain","Gain",juce::NormalisableRange<float>(0.0f,1.0f),1.f));
-	
+	mGainParameter = parameters.getRawParameterValue("gain");
+
 	addParameter(mDriveParameter = new juce::AudioParameterFloat("drive","Drive",1.0f,100.0f,1.0f));
 
 	addParameter(mMixParameter= new juce::AudioParameterFloat("wet","wet", juce::NormalisableRange<float>(0.0f, 1.0f), 1.0f));
@@ -168,10 +168,8 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 			// Function used to switch between algorithms
 			*channelData = OptionChange(channelData);
 			// Mix control between the distorted and clean signal.
-			*channelData = ((*channelData*mMixParameter->get()) +		
-						    (cleansig*(1-mMixParameter->get())))
-							*mGainParameter->get();
-			
+			*channelData = ((*channelData*mMixParameter->get()) +
+				(cleansig*(1 - mMixParameter->get())))**mGainParameter;
 			channelData++;				// Interate through next sample
 		}
 	}
@@ -228,7 +226,6 @@ void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& dest
 {	
 	// XML file used to save saved state
 	std::unique_ptr<juce::XmlElement> xml(new juce::XmlElement("ParamTutorial"));
-	xml->setAttribute("gain", (double)*mGainParameter);
 	xml->setAttribute("drive", (double)*mDriveParameter);
 	xml->setAttribute("mix", (double)*mMixParameter);
 	xml->setAttribute("combo",(int)*mSwitchParameter);
@@ -241,7 +238,7 @@ void DistortionPluginAudioProcessor::setStateInformation (const void* data, int 
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 	//if (xmlState.get() != nullptr)			
 		if (xmlState->hasTagName("ParamTutorial"))
-			*mGainParameter = (float)xmlState->getDoubleAttribute("gain",0.0f);
+
 			*mDriveParameter = (float)xmlState->getDoubleAttribute("drive",0.0f);
 			*mMixParameter = (float)xmlState->getDoubleAttribute("mix",0.0f);
 			*mSwitchParameter = (int)xmlState->getDoubleAttribute("combo",0.0f);

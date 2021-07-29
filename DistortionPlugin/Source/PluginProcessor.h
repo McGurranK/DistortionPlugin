@@ -57,7 +57,9 @@ public:
 
 
 private:
-	juce::AudioParameterFloat* mGainParameter;
+	juce::AudioProcessorValueTreeState parameters;
+	std::atomic<float>* mGainParameter = nullptr;
+
 	juce::AudioParameterFloat* mDriveParameter;
 	juce::AudioParameterFloat* mMixParameter;
 	juce::AudioParameterInt* mSwitchParameter;
