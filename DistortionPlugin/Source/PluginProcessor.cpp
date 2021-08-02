@@ -32,9 +32,7 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 		 std::make_unique<juce::AudioParameterFloat>("drive","Drive",1.0f,100.0f,1.0f),
 		 
 		 // Setting up Mix Parameter (ID, NAME, Min, Max, Default)
-		 std::make_unique<juce::AudioParameterFloat>("mix","mix",0.0f,1.0f,1.0f),
-
-		 std::make_unique<juce::AudioParameterInt>("switch","switch",1,3,1),
+		 std::make_unique<juce::AudioParameterFloat>("mix","mix",0.0f,1.0f,1.0f)
 		 }
 		 )
 #endif
@@ -45,7 +43,7 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 	mMixParameter = parameters.getRawParameterValue("mix");
 	
 	// Setting up switch using add parameter (Needs replaced with parameter int)
-	addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 1));
+	addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 2));
 	
 }
 
@@ -263,6 +261,7 @@ void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& dest
 	auto state = parameters.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml,destData);
+
 }
 
 void DistortionPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)

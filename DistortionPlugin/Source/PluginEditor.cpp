@@ -7,13 +7,8 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState (vts)
 
 {	
-	// Links to the plugin Processor
-	auto& params = processor.getParameters();
-
-
-	juce::AudioParameterFloat* MixParameter = (juce::AudioParameterFloat*)params.getUnchecked(2);
-
-	juce::AudioParameterInt* comboParameter = (juce::AudioParameterInt*)params.getUnchecked(3);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/* Slider Variables*/
 
 	// Gain control
 	addAndMakeVisible(GainSlider);															// Object made Visible
@@ -27,13 +22,19 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor
 	addAndMakeVisible(MixSlider);									// Object made Visible
 	mixAttachment.reset(new SliderAttachment(valueTreeState, "mix", MixSlider));
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/* ComboBox Variables*/
 
+	// Links to the plugin Processor 
+	auto& params = processor.getParameters();
+	juce::AudioParameterInt* comboParameter = (juce::AudioParameterInt*)params.getUnchecked(3);
+	
 	// Combobox for changing distortion types
 	addAndMakeVisible(OptionsCombobox);							   // Making ComboBox visible
 	
 	// Adding Options to dropdown
-	OptionsCombobox.addItemList(distortionTypes,1);
-	OptionsCombobox.onChange = [this] {OptionChangeEditor();};		   // Implementing switch function
+	OptionsCombobox.addItemList(distortionTypes, 1);
+	OptionsCombobox.onChange = [this] {OptionChangeEditor(); };
 	OptionsCombobox.addListener(this);
 	OptionsCombobox.setSelectedId(*comboParameter);
 
@@ -43,11 +44,7 @@ DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor
 
 }
 
-DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor()
-{
-
-}
-
+DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor(){}
 
 void DistortionPluginAudioProcessorEditor::resized()
 {	
@@ -72,14 +69,13 @@ void DistortionPluginAudioProcessorEditor::resized()
 	OptionsCombobox.setBounds(comboX, comboY, comboWidth, comboHeight);				// Setting position and size
 
 }
-
 void DistortionPluginAudioProcessorEditor::OptionChangeEditor()
 {
 
 	auto& params = processor.getParameters();
 	juce::AudioParameterInt* comboParameter = (juce::AudioParameterInt*)params.getUnchecked(3);
 
-	switch (*comboParameter)
+	switch (comboParameter->juce::AudioParameterInt::get())
 	{
 	case 1:OptionsCombobox.setSelectedId(1); break;	
 	
@@ -92,39 +88,18 @@ void DistortionPluginAudioProcessorEditor::OptionChangeEditor()
 	}
 }
 
-
 // ComboBoxchanged function used to link the gui and audioparameter
 void  DistortionPluginAudioProcessorEditor::comboBoxChanged(juce::ComboBox* combobox)
 {
 	
 	// Reference to the paramters created in the processor file
 	auto& params = processor.getParameters();
-	
-	// if the value of the combobox listener is the same as a referenced option box
 	if (combobox == &OptionsCombobox)
-	{	
+	{
 		// Link between the combobox and the combobox paramter on the processor
 		juce::AudioParameterInt* combo = (juce::AudioParameterInt*)params.getUnchecked(3);
-		
+
 		*combo = OptionsCombobox.getSelectedId();
-
 	}
-
 }
 
-// Function using the slidervaluechanged function to link the sliders to the audio parameters being used in the processor.
-void  DistortionPluginAudioProcessorEditor::sliderValueChanged(juce::Slider* slider) 
-{	
-	// creating a link to the processor
-	auto& params = processor.getParameters();
-
-	if (slider == &MixSlider)
-	{
-
-		juce::AudioParameterFloat* MixParameter = (juce::AudioParameterFloat*)params.getUnchecked(2);
-
-		*MixParameter = (float)MixSlider.getValue();
-
-	}
-	return;
-}

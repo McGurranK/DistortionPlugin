@@ -13,7 +13,7 @@
 //==============================================================================
 /**
 */
-class DistortionPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, juce::ComboBox::Listener, juce::Slider::Listener
+class DistortionPluginAudioProcessorEditor  : public juce::AudioProcessorEditor, juce::ComboBox::Listener
 {
 public:
     DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor&, juce::AudioProcessorValueTreeState& vts);
@@ -42,7 +42,6 @@ private:
 	std::unique_ptr<SliderAttachment> mixAttachment;			
 	
 	void comboBoxChanged(juce::ComboBox*) override;
-	void sliderValueChanged(juce::Slider*) override;
 
 	juce::ComboBox OptionsCombobox;	// Option box with Types of distortion
 	
