@@ -55,12 +55,19 @@ public:
 
 private:
 	
+	
 	// Container for delayed signal
 	std::vector<float>	mDelayBufferLeft{1024,0};
-
+	std::vector<float>	mDelayBufferRight{1024,0};	
 	
+
 	// Setup read and write positions
-	int mWritePosition{ 0 }, mReadPosition{ 0 }, mDelayBufferSize {0};
+	int mWritePosition{ 0 }, mReadPosition{ 0 }, mDelayBufferSize{ 0 }, mFeedbackIndex{ 0 };
+
+	// Delay Time
+	float mDelayTime{0.5};
+	float outputLeft{ 0 };
+	float outputRight{ 0 };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayPluginAudioProcessor)

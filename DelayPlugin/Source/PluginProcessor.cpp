@@ -26,7 +26,9 @@ DelayPluginAudioProcessor::DelayPluginAudioProcessor()
 
 DelayPluginAudioProcessor::~DelayPluginAudioProcessor()
 {
-	mDelayBuffer.clear();
+	// Clearing buffers when program existed
+	mDelayBufferLeft.clear();
+	mDelayBufferRight.clear();
 }
 
 //==============================================================================
@@ -94,12 +96,15 @@ void DelayPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void DelayPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	// Setting variable to 1024
-	mDelayBufferSize = (2*sampleRate*getNumOutputChannels())*2;
+
+
+	// setting up delay buffer size for two seconds
+	mDelayBufferSize = (mDelayTime*sampleRate)*2;  	
 	
 	// Setting buffer size
-	mDelayBuffer.resize(mDelayBufferSize);
-	
+	mDelayBufferLeft.resize(mDelayBufferSize);
+	mDelayBufferRight.resize(mDelayBufferSize);
+
 
 }
 
@@ -145,20 +150,37 @@ void DelayPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-	for (int channel = 0; channel < totalNumInputChannels; ++channel)
-	{
 		// Incoming samples
-		auto *channelData = buffer.getWritePointer(channel);
 
+		auto *channelDataLeft = buffer.getWritePointer(0);
+		auto *channelDataRight = buffer.getWritePointer(1);
+		
 		// interate through each sample
-		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample) 
-		{
+		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample)
+		{			
+			// Feedback Parameter
+			mFeedbackIndex = mWritePosition - (mDelayBufferSize / 2);
+			if (mFeedbackIndex < 0) 
+			{
+				mFeedbackIndex = mDelayBufferSize + mFeedbackIndex;
+			}
+			
+			if (mFeedbackIndex > mDelayBufferSize) 
+			{
+				mFeedbackIndex = 0;
+			}
+
+			channelDataLeft[sample] += (mDelayBufferLeft[mFeedbackIndex])*0.5;
+			channelDataRight[sample] += (mDelayBufferRight[mFeedbackIndex])*0.5;
+
 			// If the write position is less than the delay bufferSize
 			// Set the data at this position in the incoming channel data
 			if (mWritePosition < mDelayBufferSize)
 			{
 
-				mDelayBuffer[mWritePosition] = channelData[sample];
+				mDelayBufferLeft[mWritePosition] = channelDataLeft[sample];
+				mDelayBufferRight[mWritePosition] = channelDataRight[sample];
+
 
 			}
 			// Else if the write position is greater than or equal to the delay buffer size
@@ -166,13 +188,15 @@ void DelayPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 			else if (mWritePosition >= mDelayBufferSize)
 			{
 				mWritePosition = 0;
-				mDelayBuffer[mWritePosition] = channelData[sample];
+				mDelayBufferLeft[mWritePosition] = channelDataLeft[sample];
+				mDelayBufferRight[mWritePosition] = channelDataRight[sample];
 			}
 
 			// Readposition is the the write position divided by two
 			// Done this way to leave extra space
 			mReadPosition = mWritePosition - (mDelayBufferSize / 2);
-			
+
+
 			// If the read position is less than zero it will be a minus value
 			// So to wrap the index around add this to the buffer size
 			if (mReadPosition < 0)
@@ -185,19 +209,18 @@ void DelayPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 			{
 				mReadPosition = 0;
 
-			}
+			}				
 
-			// Output at the current sample equal to the delayed signal at the current write position
-			float mMixParameter = 0.4;
-			float cleanSig = channelData[sample];
-			channelData[sample] =  mDelayBuffer[mReadPosition];
-			channelData[sample] = ((channelData[sample]*mMixParameter) + (cleanSig*(1 - mMixParameter)))*1;
+			// Writing data to the left and write channels
+			channelDataLeft[sample] += mDelayBufferLeft[mReadPosition];
+			channelDataRight[sample] += mDelayBufferRight[mReadPosition];
 
 
 		// Iterate write and read position
 		mWritePosition++;
 		mReadPosition++;
-		}
+
+		
 
 	}
 
