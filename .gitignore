@@ -128,3 +128,127 @@ DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/5
 DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/41afc7da514ada59/PLUGINPROCESSOR.ipch
 *.tlog
 *.log
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v15/ipch/AutoPCH/99ec489108a1a14/INCLUDE_JUCE_DATA_STRUCTURES.ipch
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/.suo
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/Browse.VC.db
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/Browse.VC.opendb
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/ipch/AutoPCH/444e598aaeb0e8e7/PLUGINPROCESSOR.ipch
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/ipch/AutoPCH/646a20f10fcabf68/PLUGINEDITOR.ipch
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/Solution.VC.db
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/Solution.VC.db-shm
+DelayPlugin/Builds/VisualStudio2017/.vs/DelayPlugin/v15/Solution.VC.db-wal
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin.sln
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_SharedCode.vcxproj
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_SharedCode.vcxproj.filters
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_StandalonePlugin.vcxproj
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_StandalonePlugin.vcxproj.filters
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_StandalonePlugin.vcxproj.user
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_VST3.vcxproj
+DelayPlugin/Builds/VisualStudio2017/DelayPlugin_VST3.vcxproj.filters
+DelayPlugin/Builds/VisualStudio2017/resources.rc
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/DelayPlugin.lib
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/DelayPlugin_SharedCode.pdb
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_utils.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Standalone Plugin/DelayPlugin.exe
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Standalone Plugin/DelayPlugin.ilk
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Standalone Plugin/DelayPlugin.pdb
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Standalone Plugin/include_juce_audio_plugin_client_Standalone.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Standalone Plugin/resources.res
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/Standalone Plugin/vc141.pdb
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/DelayPlugin.exp
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/DelayPlugin.ilk
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/DelayPlugin.lib
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/DelayPlugin.pdb
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/DelayPlugin.vst3
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+DelayPlugin/Builds/VisualStudio2017/x64/Debug/VST3/vc141.pdb
+DelayPlugin/Builds/VisualStudio2019/.vs/DelayPlugin/v15/.suo
+DelayPlugin/Builds/VisualStudio2019/.vs/DelayPlugin/v15/Browse.VC.db
+DelayPlugin/Builds/VisualStudio2019/.vs/DelayPlugin/v15/ipch/AutoPCH/181dafdd8c19ffd9/PLUGINPROCESSOR.ipch
+DelayPlugin/Builds/VisualStudio2019/.vs/DelayPlugin/v15/ipch/AutoPCH/ad3f0e1d8f3a2cb6/PLUGINEDITOR.ipch
+DelayPlugin/Builds/VisualStudio2019/.vs/DelayPlugin/v15/Solution.VC.db
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin.sln
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_SharedCode.vcxproj
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_SharedCode.vcxproj.filters
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_StandalonePlugin.vcxproj
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_StandalonePlugin.vcxproj.filters
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_StandalonePlugin.vcxproj.user
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_VST3.vcxproj
+DelayPlugin/Builds/VisualStudio2019/DelayPlugin_VST3.vcxproj.filters
+DelayPlugin/Builds/VisualStudio2019/resources.rc
+DelayPlugin/JuceLibraryCode/include_juce_audio_basics.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_basics.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_devices.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_devices.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_formats.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_formats.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_AU.r
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS.r
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS_1.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS_2.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS_3.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS_4.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS_utils.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_RTAS_utils.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_plugin_client_VST_utils.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_processors.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_processors.mm
+DelayPlugin/JuceLibraryCode/include_juce_audio_utils.cpp
+DelayPlugin/JuceLibraryCode/include_juce_audio_utils.mm
+DelayPlugin/JuceLibraryCode/include_juce_core.cpp
+DelayPlugin/JuceLibraryCode/include_juce_core.mm
+DelayPlugin/JuceLibraryCode/include_juce_data_structures.cpp
+DelayPlugin/JuceLibraryCode/include_juce_data_structures.mm
+DelayPlugin/JuceLibraryCode/include_juce_events.cpp
+DelayPlugin/JuceLibraryCode/include_juce_events.mm
+DelayPlugin/JuceLibraryCode/include_juce_graphics.cpp
+DelayPlugin/JuceLibraryCode/include_juce_graphics.mm
+DelayPlugin/JuceLibraryCode/include_juce_gui_basics.cpp
+DelayPlugin/JuceLibraryCode/include_juce_gui_basics.mm
+DelayPlugin/JuceLibraryCode/include_juce_gui_extra.cpp
+DelayPlugin/JuceLibraryCode/include_juce_gui_extra.mm
+DelayPlugin/JuceLibraryCode/JuceHeader.h
+DelayPlugin/JuceLibraryCode/JucePluginDefines.h
+DelayPlugin/JuceLibraryCode/ReadMe.txt
+DistortionPlugin/Builds/VisualStudio2019/resources.rc
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_VST3.vcxproj.filters
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_VST3.vcxproj
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_StandalonePlugin.vcxproj.filters
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_StandalonePlugin.vcxproj
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_SharedCode.vcxproj.filters
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_SharedCode.vcxproj
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin.sln
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/Solution.VC.db
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/ipch/AutoPCH/7e7b36afc3d5e0f8/PLUGINEDITOR.ipch
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/Browse.VC.db
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/.suo
+DistortionPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/DistortionPlugin.pdb
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/Solution.VC.db
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/ipch/AutoPCH/f30b8d6e5b553155/PLUGINPROCESSOR.ipch
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/ipch/AutoPCH/e43a80200bc44628/PLUGINEDITOR.ipch
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/Browse.VC.db
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/.suo

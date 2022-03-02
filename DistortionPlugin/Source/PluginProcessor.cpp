@@ -21,17 +21,30 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+	 ), 
+	// Setting up parameter variables
+	parameters(*this, nullptr, juce::Identifier("AVTS"),{		
+		 
+		 // Setting up Gain Parameter (ID, NAME, Min, Max, Default)
+		 std::make_unique<juce::AudioParameterFloat>("gain","Gain",0.0f,1.0f,1.0f),
+		 
+		 // Setting up drive parameter with (ID, NAME, Min, Max, Default)
+		 std::make_unique<juce::AudioParameterFloat>("drive","Drive",1.0f,100.0f,1.0f),
+		 
+		 // Setting up Mix Parameter (ID, NAME, Min, Max, Default)
+		 std::make_unique<juce::AudioParameterFloat>("mix","mix",0.0f,1.0f,1.0f)
+		 }
+		 )
 #endif
 {	
-	addParameter(mGainParameter = new juce::AudioParameterFloat("gain","Gain",juce::NormalisableRange<float>(0.0f,1.0f),1.0f));
+	// Gets the value set for the parameters gain,drive, and mix using getrawparameters
+	mGainParameter = parameters.getRawParameterValue("gain");
+	mDriveParameter = parameters.getRawParameterValue("drive");
+	mMixParameter = parameters.getRawParameterValue("mix");
 	
-	addParameter(mDriveParameter = new juce::AudioParameterFloat("drive","Drive",1.0f,100.0f,1.0f));
-
-	addParameter(mMixParameter= new juce::AudioParameterFloat("wet","wet", juce::NormalisableRange<float>(0.0f, 1.0f), 1.0f));
-
-	addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 1));
-
+	// Setting up switch using add parameter (Needs replaced with parameter int)
+	addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 2));
+	
 }
 
 DistortionPluginAudioProcessor::~DistortionPluginAudioProcessor()
@@ -146,13 +159,9 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-	// In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+   
+	
+	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
 	// Interate through the channels
@@ -161,18 +170,20 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 		// Channel Data used to write to buffer
 		auto *channelData = buffer.getWritePointer(channel);
 
+		//
 		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample) 
 		{
 			// Variable created to store incoming channeldata into a float.
 			float cleansig = *channelData;
+
 			// Function used to switch between algorithms
 			*channelData = OptionChange(channelData);
-			// Mix control between the distorted and clean signal.
-			*channelData = ((*channelData*mMixParameter->get()) +		
-						    (cleansig*(1-mMixParameter->get())))
-							*mGainParameter->get();
+
+			// Mix control between the distorted and clean signal with gain applied at end
+			*channelData = ((*channelData**mMixParameter)+(cleansig*(1 - *mMixParameter)))**mGainParameter;
 			
-			channelData++;				// Interate through next sample
+			// Interate through each channel
+			channelData++;				
 		}
 	}
 }
@@ -183,33 +194,54 @@ float DistortionPluginAudioProcessor::OptionChange(float *channelData)
 	switch (mSwitchParameter->get())			// Take value of Item Selected
 	{
 	default:									// Print is holder until DSP implemnted
+	
 	case 1:
-		// Waveshapping algorithm
-		*channelData *= mDriveParameter->get(); // Multiplying input data 
-		*channelData = (float)((2.f / M_PI)* atan(*channelData)); //using waveshapping on the input data
+		/* Waveshapping algorithm*/
+		
+		// Multiplying input data 
+		*channelData *= *mDriveParameter; 
+		
+		//using waveshapping on the input data
+		*channelData = (float)((2.f / M_PI)* atan(*channelData)); 
 
 		break;				
 
 	case 2: 
-		//HardClipping
-		*channelData *= mDriveParameter->get(); //Multiplying input data
-		// Hardclipping distortion
-		if (*channelData > 0.7) {
+		/* HardClipping Algorithm */
+
+		//Multiplying input data
+		*channelData *= *mDriveParameter; 
+		
+		// Using if statement to cut off the top of a waveform
+		// if the sample is greater than 0.7 set it to 1.0
+		if (*channelData > 0.7) 
+		{
+			
 			*channelData = 1;
+		
 		}
-		if (*channelData < -0.7) {
+		// if the sample is less than -0.7 set it to -1.0
+		if (*channelData < -0.7) 
+		
+		{
+			
 			*channelData = -1;
 		}
 
 		break;
 
 	case 3:
-		// Sine Algorithm
-		*channelData = std::sin(mDriveParameter->get()**channelData); // using sine on input data
+		/* Sine Algorithm */
+
+		// using sine on input data
+		*channelData = std::sin(*mDriveParameter**channelData); 
+		
 		// Implement wavetable for greater efficiency
+		
 		break;
 
 	}
+	// return the channeldata as output
 	return *channelData;
 }
 
@@ -220,31 +252,25 @@ bool DistortionPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
 {
-    return new DistortionPluginAudioProcessorEditor (*this);
+    return new DistortionPluginAudioProcessorEditor (*this,parameters);
 }
 
 //==============================================================================
 void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {	
-	// XML file used to save saved state
-	std::unique_ptr<juce::XmlElement> xml(new juce::XmlElement("ParamTutorial"));
-	xml->setAttribute("gain", (double)*mGainParameter);
-	xml->setAttribute("drive", (double)*mDriveParameter);
-	xml->setAttribute("mix", (double)*mMixParameter);
-	xml->setAttribute("combo",(int)*mSwitchParameter);
-	copyXmlToBinary(*xml, destData);
+	auto state = parameters.copyState();
+	std::unique_ptr<juce::XmlElement> xml(state.createXml());
+	copyXmlToBinary(*xml,destData);
+
 }
 
 void DistortionPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {	
-	// XML file information
-	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
-	if (xmlState.get() != nullptr)			
-		if (xmlState->hasTagName("ParamTutorial"))
-			*mGainParameter = (float)xmlState->getDoubleAttribute("gain",1.0f);
-			*mDriveParameter = (float)xmlState->getDoubleAttribute("drive",1.0f);
-			*mMixParameter = (float)xmlState->getDoubleAttribute("mix",1.0f);
-			*mSwitchParameter = (int)xmlState->getDoubleAttribute("combo",1.0f);
+	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data,sizeInBytes));
+
+	if (xmlState.get() != nullptr)
+		if (xmlState->hasTagName(parameters.state.getType()))
+			parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 
 }
 
