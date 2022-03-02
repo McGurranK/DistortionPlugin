@@ -48,11 +48,11 @@ DistortionPluginAudioProcessorEditor::~DistortionPluginAudioProcessorEditor(){}
 
 void DistortionPluginAudioProcessorEditor::resized()
 {	
-
+	
 	// Objects Bounds
 	int WidthStart = (getWidth() / 3) * 2;
 	int gainHeightStart = 0;
-
+	
 
 	// Combo Box
 	int comboX = ((getWidth()/3)*2)/ 5;

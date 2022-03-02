@@ -234,3 +234,21 @@ DelayPlugin/JuceLibraryCode/include_juce_gui_extra.mm
 DelayPlugin/JuceLibraryCode/JuceHeader.h
 DelayPlugin/JuceLibraryCode/JucePluginDefines.h
 DelayPlugin/JuceLibraryCode/ReadMe.txt
+DistortionPlugin/Builds/VisualStudio2019/resources.rc
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_VST3.vcxproj.filters
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_VST3.vcxproj
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_StandalonePlugin.vcxproj.filters
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_StandalonePlugin.vcxproj
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_SharedCode.vcxproj.filters
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin_SharedCode.vcxproj
+DistortionPlugin/Builds/VisualStudio2019/DistortionPlugin.sln
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/Solution.VC.db
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/ipch/AutoPCH/7e7b36afc3d5e0f8/PLUGINEDITOR.ipch
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/Browse.VC.db
+DistortionPlugin/Builds/VisualStudio2019/.vs/DistortionPlugin/v15/.suo
+DistortionPlugin/Builds/VisualStudio2017/x64/Debug/Shared Code/DistortionPlugin.pdb
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/Solution.VC.db
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/ipch/AutoPCH/f30b8d6e5b553155/PLUGINPROCESSOR.ipch
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/ipch/AutoPCH/e43a80200bc44628/PLUGINEDITOR.ipch
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/Browse.VC.db
+DistortionPlugin/Builds/VisualStudio2017/.vs/DistortionPlugin/v16/.suo
