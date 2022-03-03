@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-DelayPluginAudioProcessorEditor::DelayPluginAudioProcessorEditor (DelayPluginAudioProcessor& p)
+JUCEDSPModuleAudioProcessorEditor::JUCEDSPModuleAudioProcessorEditor (JUCEDSPModuleAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     // Make sure that before the constructor has finished, you've set the
@@ -18,12 +18,12 @@ DelayPluginAudioProcessorEditor::DelayPluginAudioProcessorEditor (DelayPluginAud
     setSize (400, 300);
 }
 
-DelayPluginAudioProcessorEditor::~DelayPluginAudioProcessorEditor()
+JUCEDSPModuleAudioProcessorEditor::~JUCEDSPModuleAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void DelayPluginAudioProcessorEditor::paint (juce::Graphics& g)
+void JUCEDSPModuleAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
@@ -33,7 +33,7 @@ void DelayPluginAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
-void DelayPluginAudioProcessorEditor::resized()
+void JUCEDSPModuleAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
