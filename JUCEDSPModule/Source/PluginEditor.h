@@ -14,11 +14,11 @@
 //==============================================================================
 /**
 */
-class DelayPluginAudioProcessorEditor  : public juce::AudioProcessorEditor
+class JUCEDSPModuleAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    DelayPluginAudioProcessorEditor (DelayPluginAudioProcessor&);
-    ~DelayPluginAudioProcessorEditor() override;
+    JUCEDSPModuleAudioProcessorEditor (JUCEDSPModuleAudioProcessor&);
+    ~JUCEDSPModuleAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
@@ -27,7 +27,7 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    DelayPluginAudioProcessor& audioProcessor;
+    JUCEDSPModuleAudioProcessor& audioProcessor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayPluginAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JUCEDSPModuleAudioProcessorEditor)
 };
