@@ -12,6 +12,7 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
     , parameters(*this, nullptr, juce::Identifier("AVTS"),createAPVTSLayout())
 {
     parameters.addParameterListener ("gain", this);
+    parameters.addParameterListener ("drive", this);
     parameters.addParameterListener ("mix", this);
     
     waveShaper.functionToUse = [](float SampleValue)
@@ -79,9 +80,9 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int maxim
     specification.numChannels = getTotalNumInputChannels();
     
     mixControl.prepare (specification);
-    gainProcessor.prepare (specification);
+    inputDriveProcessor.prepare (specification);
     waveShaper.prepare (specification);
-    driveProcessor.prepare (specification);
+    outputGain.prepare (specification);
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -113,9 +114,13 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     mixControl.pushDrySamples (drySamplesBlock);
     
     juce::dsp::AudioBlock<float> gainBlock (buffer);
-    juce::dsp::ProcessContextReplacing<float> gainProcessContext (gainBlock);
-    gainProcessor.process (gainProcessContext);
-    waveShaper.process (gainProcessContext);
+    juce::dsp::ProcessContextReplacing<float> driveContext (gainBlock);
+    inputDriveProcessor.process (driveContext);
+    waveShaper.process (driveContext);
+    
+    juce::dsp::AudioBlock<float> outputBlock (buffer);
+    juce::dsp::ProcessContextReplacing<float> outputGainContext (outputBlock);
+    outputGain.process (outputGainContext);
     
     juce::dsp::AudioBlock<float> wetSampleBlock (buffer);
     mixControl.mixWetSamples (wetSampleBlock);
@@ -130,8 +135,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
     
-    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", -80.f, 24.0f, 1.0f));
-    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("drive","Drive", 1.0f, 100.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", -80.f, 0.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("drive","Drive", -80.f, 24.0f, 0.0f));
     parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("mix", "mix", 0.0f, 1.0f, 1.0f));
     
     return parameterLayout;
@@ -140,9 +145,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 void DistortionPluginAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
 {
     if (parameterID == "gain")
-        gainProcessor.setGainDecibels (newValue);
+        outputGain.setGainDecibels (newValue);
     else if (parameterID == "drive")
-        ;
+        inputDriveProcessor.setGainDecibels (newValue);
     else if (parameterID == "mix")
         mixControl.setWetMixProportion (newValue);
 }
