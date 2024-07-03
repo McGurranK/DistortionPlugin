@@ -1,23 +1,33 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-
 DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor 
-(DistortionPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-: AudioProcessorEditor (&p), audioProcessor (p)
-
+(DistortionPluginAudioProcessor& ProcessorRef, juce::AudioProcessorValueTreeState& ValueTreeRef)
+    : AudioProcessorEditor (&ProcessorRef)
+    , gainAttachment (std::make_unique<SliderAttachment> (ValueTreeRef, "gain", gainSlider))
+    , driveAttachment (std::make_unique <SliderAttachment> (ValueTreeRef, "drive", driveSlider))
+    , mixAttachment (std::make_unique <SliderAttachment> (ValueTreeRef, "mix", mixSlider))
+    , audioProcessor (ProcessorRef)
 {
-	addAndMakeVisible(GainSlider);
-    gainAttachment.reset (new SliderAttachment (vts, "gain",GainSlider));
+    const auto initSliders = [&] (juce::Slider& SliderRef, juce::String SliderName)
+    {
+        addAndMakeVisible (SliderRef);
+        SliderRef.setLookAndFeel (&LookAndFeel);
+        SliderRef.setName (SliderName);
+        SliderRef.setTitle (SliderName);
+    };
+    
+    initSliders (gainSlider, "Gain");
+    initSliders (mixSlider, "Mix");
+    initSliders (driveSlider, "Drive");
 
-	addAndMakeVisible(DriveSlider);
-    driveAttachment.reset (new SliderAttachment (vts, "drive", DriveSlider));
+    setSize (500, 250);
+	setResizable (true, true);
+}
 
-	addAndMakeVisible(MixSlider);									// Object made Visible
-    mixAttachment.reset (new SliderAttachment (vts, "mix", MixSlider));
-
-	setSize (500, 250);												// Set editor Size
-	setResizable(true, true);										// Editor can be resized
+void DistortionPluginAudioProcessorEditor::paint (juce::Graphics& GraphicsRef)
+{
+    GraphicsRef.fillAll (juce::Colours::white);
 }
 
 void DistortionPluginAudioProcessorEditor::resized()
@@ -26,11 +36,8 @@ void DistortionPluginAudioProcessorEditor::resized()
 	int gainHeightStart = 0;
 	
 	int comboX = ((getWidth()/3)*2)/ 5;
-	int comboY = getHeight()/ 10;
-	int comboWidth = (((getWidth() / 3) * 2)/5)*3;
-	int comboHeight = comboWidth/8;
 
-	GainSlider.setBounds(WidthStart,gainHeightStart,200,125); // Setting position and size
-	MixSlider.setBounds(WidthStart, 125, 200, 125);			// Setting Postion and size
-	DriveSlider.setBounds(comboX, 50, 200, 200);					// Setting position
+	gainSlider.setBounds(WidthStart,gainHeightStart,200,125); // Setting position and size
+	mixSlider.setBounds(WidthStart, 125, 200, 125);			// Setting Postion and size
+	driveSlider.setBounds(comboX, 50, 200, 200);					// Setting position
 }

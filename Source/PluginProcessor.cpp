@@ -68,7 +68,6 @@ const juce::String DistortionPluginAudioProcessor::getProgramName (int)
 
 void DistortionPluginAudioProcessor::changeProgramName (int , const juce::String&)
 {
-	//Do Nothing
 }
 
 //==============================================================================
@@ -82,6 +81,7 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int maxim
     mixControl.prepare (specification);
     gainProcessor.prepare (specification);
     waveShaper.prepare (specification);
+    driveProcessor.prepare (specification);
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -90,10 +90,6 @@ void DistortionPluginAudioProcessor::releaseResources()
 
 bool DistortionPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
@@ -134,21 +130,17 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
     
-    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", 0.0f, 1.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", -80.f, 24.0f, 1.0f));
     parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("drive","Drive", 1.0f, 100.0f, 1.0f));
     parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("mix", "mix", 0.0f, 1.0f, 1.0f));
     
-    // Todo Add toggle option
-    
-    //addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 2));
-
     return parameterLayout;
 }
 
 void DistortionPluginAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
 {
     if (parameterID == "gain")
-        gainProcessor.setGainLinear (newValue);
+        gainProcessor.setGainDecibels (newValue);
     else if (parameterID == "drive")
         ;
     else if (parameterID == "mix")
