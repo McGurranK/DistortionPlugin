@@ -23,7 +23,6 @@ public:
     }
 };
 
-
 class DistortionPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
 public:

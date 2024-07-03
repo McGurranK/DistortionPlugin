@@ -110,6 +110,9 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
+    // Temporary buffer for feedback path here
+    
+    
     juce::dsp::AudioBlock<float> drySamplesBlock (buffer);
     mixControl.pushDrySamples (drySamplesBlock);
     
@@ -117,6 +120,17 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     juce::dsp::ProcessContextReplacing<float> driveContext (gainBlock);
     inputDriveProcessor.process (driveContext);
     waveShaper.process (driveContext);
+
+    // This is the feedback path
+    for (int channel = 0; channel < buffer.getNumChannels(); channel++)
+    {
+        auto channelData = buffer.getWritePointer (channel);
+        
+        for (int sample = 0; sample < buffer.getNumSamples(); sample++)
+        {
+            feedbackPath.pushSample (channel, channelData [sample]);
+        }
+    }
     
     juce::dsp::AudioBlock<float> outputBlock (buffer);
     juce::dsp::ProcessContextReplacing<float> outputGainContext (outputBlock);

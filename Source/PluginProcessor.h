@@ -46,6 +46,8 @@ private:
     
     juce::dsp::Gain<float> outputGain;
     
+    juce::dsp::DelayLine<float> feedbackPath;
+    
 	juce::AudioProcessorValueTreeState parameters;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)

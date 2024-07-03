@@ -37,7 +37,7 @@ void DistortionPluginAudioProcessorEditor::resized()
 	
 	int comboX = ((getWidth()/3)*2)/ 5;
 
-	gainSlider.setBounds(WidthStart,gainHeightStart,200,125); // Setting position and size
-	mixSlider.setBounds(WidthStart, 125, 200, 125);			// Setting Postion and size
-	driveSlider.setBounds(comboX, 50, 200, 200);					// Setting position
+	gainSlider.setBounds (WidthStart,gainHeightStart,200,125); // Setting position and size
+	mixSlider.setBounds (WidthStart, 125, 200, 125);			// Setting Postion and size
+	driveSlider.setBounds (comboX, 50, 200, 200);					// Setting position
 }
