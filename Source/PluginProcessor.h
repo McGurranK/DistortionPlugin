@@ -41,6 +41,7 @@ public:
 private:
     juce::dsp::DryWetMixer<float> mixControl;
     juce::dsp::Gain<float> gainProcessor;
+    juce::dsp::WaveShaper<float> waveShaper;
     
 	juce::AudioProcessorValueTreeState parameters;
 

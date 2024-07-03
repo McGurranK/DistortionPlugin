@@ -13,6 +13,11 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 {
     parameters.addParameterListener ("gain", this);
     parameters.addParameterListener ("mix", this);
+    
+    waveShaper.functionToUse = [](float SampleValue)
+    {
+        return tanh (SampleValue);
+    };
 }
 
 //==============================================================================
@@ -76,6 +81,7 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int maxim
     
     mixControl.prepare (specification);
     gainProcessor.prepare (specification);
+    waveShaper.prepare (specification);
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -113,6 +119,7 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     juce::dsp::AudioBlock<float> gainBlock (buffer);
     juce::dsp::ProcessContextReplacing<float> gainProcessContext (gainBlock);
     gainProcessor.process (gainProcessContext);
+    waveShaper.process (gainProcessContext);
     
     juce::dsp::AudioBlock<float> wetSampleBlock (buffer);
     mixControl.mixWetSamples (wetSampleBlock);
