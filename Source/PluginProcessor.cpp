@@ -1,17 +1,10 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-//==============================================================================
+
 DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
@@ -118,14 +111,11 @@ void DistortionPluginAudioProcessor::changeProgramName (int , const juce::String
 //==============================================================================
 void DistortionPluginAudioProcessor::prepareToPlay (double , int)
 {
-
-
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations

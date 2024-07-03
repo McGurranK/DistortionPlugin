@@ -4,28 +4,18 @@
 
 DistortionPluginAudioProcessorEditor::DistortionPluginAudioProcessorEditor 
 (DistortionPluginAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState (vts)
+: AudioProcessorEditor (&p), valueTreeState (vts), audioProcessor (p)
 
-{	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/* Slider Variables*/
+{
+	addAndMakeVisible(GainSlider);
+	gainAttachment.reset (new SliderAttachment(valueTreeState,"gain",GainSlider));
 
-	// Gain control
-	addAndMakeVisible(GainSlider);															// Object made Visible
-	gainAttachment.reset(new SliderAttachment(valueTreeState,"gain",GainSlider));
-
-	// Drive Control
 	addAndMakeVisible(DriveSlider);
 	driveAttachment.reset(new SliderAttachment(valueTreeState, "drive", DriveSlider));
 
-	// Wet and Dry Mix Control
 	addAndMakeVisible(MixSlider);									// Object made Visible
 	mixAttachment.reset(new SliderAttachment(valueTreeState, "mix", MixSlider));
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/* ComboBox Variables*/
-
-	// Links to the plugin Processor 
 	auto& params = processor.getParameters();
 	juce::AudioParameterInt* comboParameter = (juce::AudioParameterInt*)params.getUnchecked(3);
 	
