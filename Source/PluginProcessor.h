@@ -1,26 +1,14 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #pragma once
 
 #include <JuceHeader.h>
+#include "Parameters.h"
 
-//==============================================================================
-/**
-*/
-class DistortionPluginAudioProcessor  : public juce::AudioProcessor
+class DistortionPluginAudioProcessor final : public juce::AudioProcessor
 {
 public:
-    //==============================================================================
-	DistortionPluginAudioProcessor();				// Processor Constructor
-    ~DistortionPluginAudioProcessor() override;		// Processor Destructor
+	DistortionPluginAudioProcessor();
+    ~DistortionPluginAudioProcessor() override = default;
 
-    //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
@@ -57,23 +45,14 @@ public:
 
 
 private:
-	
-	// Initialise AudioProcessorValueTreeState as parameters
+    
 	juce::AudioProcessorValueTreeState parameters;
 	
-	// Atomic float varibles used to store value tree varibles.
-	// Gain Variable
-	std::atomic<float>* mGainParameter;	
-	
-	// Drive Parameter
+	std::atomic<float>* mGainParameter;
 	std::atomic<float>* mDriveParameter;
-	
-	// Mix Variable
 	std::atomic<float>* mMixParameter;
-	
-	// Parameter for switching between algorithms
-	juce::AudioParameterInt* mSwitchParameter;
 
-    //==============================================================================
+	juce::AudioParameterInt* mSwitchParameter;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
 };

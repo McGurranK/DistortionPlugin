@@ -29,7 +29,6 @@ public:
 private:
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	// Initialise Gain Slider and Slider Attachment
 	juce::Slider GainSlider		{juce::Slider::Rotary,juce::Slider::NoTextBox};			// Volume Slider
 	std::unique_ptr<SliderAttachment> gainAttachment;
 	

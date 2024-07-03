@@ -8,6 +8,7 @@
               pluginDesc="Destroyer of audio">
   <MAINGROUP id="RsCQxL" name="Ate">
     <GROUP id="{D6B369B9-C447-CCD9-033D-CDFBF43F7978}" name="Source">
+      <FILE id="oGL544" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
       <FILE id="oagmrt" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="ujzZv1" name="PluginProcessor.h" compile="0" resource="0"

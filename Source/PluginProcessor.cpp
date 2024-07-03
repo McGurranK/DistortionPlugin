@@ -40,10 +40,6 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
 	
 }
 
-DistortionPluginAudioProcessor::~DistortionPluginAudioProcessor()
-{
-}
-
 //==============================================================================
 const juce::String DistortionPluginAudioProcessor::getName() const
 {
@@ -149,7 +145,6 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-   
 	
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
