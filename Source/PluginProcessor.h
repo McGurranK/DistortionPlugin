@@ -49,6 +49,9 @@ private:
     juce::dsp::DelayLine<float> feedbackPath;
     
 	juce::AudioProcessorValueTreeState parameters;
+    
+    juce::dsp::StateVariableTPTFilter<float> stateVariableFilter;
+    juce::dsp::StateVariableTPTFilter<float> svfBandFilter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
 };

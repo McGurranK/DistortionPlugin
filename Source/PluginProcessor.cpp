@@ -14,6 +14,10 @@ DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
     parameters.addParameterListener ("gain", this);
     parameters.addParameterListener ("drive", this);
     parameters.addParameterListener ("mix", this);
+    parameters.addParameterListener ("q", this);
+    parameters.addParameterListener ("cutt", this);
+    parameters.addParameterListener ("time", this);
+    parameters.addParameterListener ("type", this);
     
     waveShaper.functionToUse = [](float SampleValue)
     {
@@ -59,7 +63,6 @@ int DistortionPluginAudioProcessor::getCurrentProgram()
 
 void DistortionPluginAudioProcessor::setCurrentProgram (int)
 {
-	//Do Nothing
 }
 
 const juce::String DistortionPluginAudioProcessor::getProgramName (int)
@@ -83,6 +86,18 @@ void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int maxim
     inputDriveProcessor.prepare (specification);
     waveShaper.prepare (specification);
     outputGain.prepare (specification);
+    stateVariableFilter.prepare (specification);
+    feedbackPath.prepare (specification);    
+    svfBandFilter.prepare (specification);
+    
+    feedbackPath.setDelay (10000); 
+    feedbackPath.setMaximumDelayInSamples (10000);
+    
+    stateVariableFilter.setType (juce::dsp::StateVariableTPTFilterType::lowpass);
+    stateVariableFilter.setCutoffFrequency (1000);
+    
+    svfBandFilter.setType (juce::dsp::StateVariableTPTFilterType::bandpass);
+    svfBandFilter.setCutoffFrequency (1000);
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
@@ -110,25 +125,36 @@ void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    // Temporary buffer for feedback path here
-    
-    
     juce::dsp::AudioBlock<float> drySamplesBlock (buffer);
     mixControl.pushDrySamples (drySamplesBlock);
+    
+    for (int channel = 0; channel < buffer.getNumChannels(); channel++)
+    {
+        auto channelPointer = buffer.getWritePointer (channel);
+        
+        for (int sample = 0; sample < buffer.getNumSamples(); sample++)
+        {
+            auto poppedDelaySample = feedbackPath.popSample (channel, feedbackPath.getDelay());
+            poppedDelaySample = stateVariableFilter.processSample (channel, poppedDelaySample) * 0.5 ;
+            
+            auto currentSample = channelPointer [sample];
+            channelPointer[sample] = ((poppedDelaySample * 0.8) + (currentSample)) * 0.5;
+        }
+    }
     
     juce::dsp::AudioBlock<float> gainBlock (buffer);
     juce::dsp::ProcessContextReplacing<float> driveContext (gainBlock);
     inputDriveProcessor.process (driveContext);
     waveShaper.process (driveContext);
-
-    // This is the feedback path
+    
     for (int channel = 0; channel < buffer.getNumChannels(); channel++)
     {
-        auto channelData = buffer.getWritePointer (channel);
+        auto channelPointer = buffer.getWritePointer (channel);
         
         for (int sample = 0; sample < buffer.getNumSamples(); sample++)
         {
-            feedbackPath.pushSample (channel, channelData [sample]);
+            auto currentSample = channelPointer [sample]; // Feedback Amount Control
+            feedbackPath.pushSample (channel, currentSample);
         }
     }
     
@@ -149,10 +175,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcess
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
     
-    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", -80.f, 0.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", -80.f, 0.0f, 0.0f));
     parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("drive","Drive", -80.f, 24.0f, 0.0f));
     parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("mix", "mix", 0.0f, 1.0f, 1.0f));
-    
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("cutt","cutt", 20.f, 20000.0f, 20000.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("q", "q", 0.0f, 10.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("time", "time", 1.f, 10000.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterChoice> ("type", "Filter Type", juce::StringArray {"Low Pass", "High Pass", "Band"}, 0));
+
     return parameterLayout;
 }
 
@@ -164,19 +194,27 @@ void DistortionPluginAudioProcessor::parameterChanged (const juce::String& param
         inputDriveProcessor.setGainDecibels (newValue);
     else if (parameterID == "mix")
         mixControl.setWetMixProportion (newValue);
+    else if (parameterID == "cutt")
+        stateVariableFilter.setCutoffFrequency (newValue);
+    else if (parameterID == "q")
+        stateVariableFilter.setResonance (newValue);
+    else if (parameterID == "time")
+        feedbackPath.setDelay (newValue);
+    else if (parameterID == "type")
+        stateVariableFilter.setType ((juce::dsp::StateVariableTPTFilterType) newValue);
 }
 
 juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
 {
-    return new DistortionPluginAudioProcessorEditor (*this, parameters);
+    return new juce::GenericAudioProcessorEditor (*this);
+//    return new DistortionPluginAudioProcessorEditor (*this, parameters);
 }
 
 void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
 	auto state = parameters.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
-	copyXmlToBinary(*xml,destData);
-
+	copyXmlToBinary (*xml,destData);
 }
 
 void DistortionPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
