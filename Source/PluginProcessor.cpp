@@ -1,54 +1,28 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-//==============================================================================
-DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-	 ), 
-	// Setting up parameter variables
-	parameters(*this, nullptr, juce::Identifier("AVTS"),{		
-		 
-		 // Setting up Gain Parameter (ID, NAME, Min, Max, Default)
-		 std::make_unique<juce::AudioParameterFloat>("gain","Gain",0.0f,1.0f,1.0f),
-		 
-		 // Setting up drive parameter with (ID, NAME, Min, Max, Default)
-		 std::make_unique<juce::AudioParameterFloat>("drive","Drive",1.0f,100.0f,1.0f),
-		 
-		 // Setting up Mix Parameter (ID, NAME, Min, Max, Default)
-		 std::make_unique<juce::AudioParameterFloat>("mix","mix",0.0f,1.0f,1.0f)
-		 }
-		 )
-#endif
-{	
-	// Gets the value set for the parameters gain,drive, and mix using getrawparameters
-	mGainParameter = parameters.getRawParameterValue("gain");
-	mDriveParameter = parameters.getRawParameterValue("drive");
-	mMixParameter = parameters.getRawParameterValue("mix");
-	
-	// Setting up switch using add parameter (Needs replaced with parameter int)
-	addParameter(mSwitchParameter = new juce::AudioParameterInt("switch", "Switch", 1, 3, 2));
-	
-}
 
-DistortionPluginAudioProcessor::~DistortionPluginAudioProcessor()
+DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
+     : AudioProcessor (BusesProperties()
+                       .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
+    , parameters(*this, nullptr, juce::Identifier("AVTS"),createAPVTSLayout())
 {
+    parameters.addParameterListener ("gain", this);
+    parameters.addParameterListener ("drive", this);
+    parameters.addParameterListener ("mix", this);
+    parameters.addParameterListener ("q", this);
+    parameters.addParameterListener ("cutt", this);
+    parameters.addParameterListener ("time", this);
+    parameters.addParameterListener ("type", this);
+    
+    waveShaper.functionToUse = [](float SampleValue)
+    {
+        return tanh (SampleValue);
+    };
 }
 
 //==============================================================================
@@ -59,29 +33,17 @@ const juce::String DistortionPluginAudioProcessor::getName() const
 
 bool DistortionPluginAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
     return false;
-   #endif
 }
 
 bool DistortionPluginAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
     return false;
-   #endif
 }
 
 bool DistortionPluginAudioProcessor::isMidiEffect() const
 {
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
     return false;
-   #endif
 }
 
 double DistortionPluginAudioProcessor::getTailLengthSeconds() const
@@ -91,8 +53,7 @@ double DistortionPluginAudioProcessor::getTailLengthSeconds() const
 
 int DistortionPluginAudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    return 1;
 }
 
 int DistortionPluginAudioProcessor::getCurrentProgram()
@@ -102,7 +63,6 @@ int DistortionPluginAudioProcessor::getCurrentProgram()
 
 void DistortionPluginAudioProcessor::setCurrentProgram (int)
 {
-	//Do Nothing
 }
 
 const juce::String DistortionPluginAudioProcessor::getProgramName (int)
@@ -112,137 +72,98 @@ const juce::String DistortionPluginAudioProcessor::getProgramName (int)
 
 void DistortionPluginAudioProcessor::changeProgramName (int , const juce::String&)
 {
-	//Do Nothing
 }
 
 //==============================================================================
-void DistortionPluginAudioProcessor::prepareToPlay (double , int)
+void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int maximumExpectedSamplesPerBlock)
 {
-
-
+    juce::dsp::ProcessSpec specification;
+    specification.maximumBlockSize = maximumExpectedSamplesPerBlock;
+    specification.sampleRate = sampleRate;
+    specification.numChannels = getTotalNumInputChannels();
+    
+    mixControl.prepare (specification);
+    inputDriveProcessor.prepare (specification);
+    waveShaper.prepare (specification);
+    outputGain.prepare (specification);
+    stateVariableFilter.prepare (specification);
+    feedbackPath.prepare (specification);    
+    svfBandFilter.prepare (specification);
+    
+    feedbackPath.setDelay (10000); 
+    feedbackPath.setMaximumDelayInSamples (10000);
+    
+    stateVariableFilter.setType (juce::dsp::StateVariableTPTFilterType::lowpass);
+    stateVariableFilter.setCutoffFrequency (1000);
+    
+    svfBandFilter.setType (juce::dsp::StateVariableTPTFilterType::bandpass);
+    svfBandFilter.setCutoffFrequency (1000);
 }
 
 void DistortionPluginAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool DistortionPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
-    return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
-   #endif
 
     return true;
-  #endif
 }
-#endif
 
 void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-   
 	
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-	// Interate through the channels
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    
+    juce::dsp::AudioBlock<float> drySamplesBlock (buffer);
+    mixControl.pushDrySamples (drySamplesBlock);
+    
+    for (int channel = 0; channel < buffer.getNumChannels(); channel++)
     {
-		// Channel Data used to write to buffer
-		auto *channelData = buffer.getWritePointer(channel);
-
-		//
-		for (auto sample = 0; sample < buffer.getNumSamples(); ++sample) 
-		{
-			// Variable created to store incoming channeldata into a float.
-			float cleansig = *channelData;
-
-			// Function used to switch between algorithms
-			*channelData = OptionChange(channelData);
-
-			// Mix control between the distorted and clean signal with gain applied at end
-			*channelData = ((*channelData**mMixParameter)+(cleansig*(1 - *mMixParameter)))**mGainParameter;
-			
-			// Interate through each channel
-			channelData++;				
-		}
-	}
-}
-float DistortionPluginAudioProcessor::OptionChange(float *channelData)
-{
-	// Switch Statement used to change the type of distortion algorithm
-	
-	switch (mSwitchParameter->get())			// Take value of Item Selected
-	{
-	default:									// Print is holder until DSP implemnted
-	
-	case 1:
-		/* Waveshapping algorithm*/
-		
-		// Multiplying input data 
-		*channelData *= *mDriveParameter; 
-		
-		//using waveshapping on the input data
-		*channelData = (float)((2.f / M_PI)* atan(*channelData)); 
-
-		break;				
-
-	case 2: 
-		/* HardClipping Algorithm */
-
-		//Multiplying input data
-		*channelData *= *mDriveParameter; 
-		
-		// Using if statement to cut off the top of a waveform
-		// if the sample is greater than 0.7 set it to 1.0
-		if (*channelData > 0.7) 
-		{
-			
-			*channelData = 1;
-		
-		}
-		// if the sample is less than -0.7 set it to -1.0
-		if (*channelData < -0.7) 
-		
-		{
-			
-			*channelData = -1;
-		}
-
-		break;
-
-	case 3:
-		/* Sine Algorithm */
-
-		// using sine on input data
-		*channelData = std::sin(*mDriveParameter**channelData); 
-		
-		// Implement wavetable for greater efficiency
-		
-		break;
-
-	}
-	// return the channeldata as output
-	return *channelData;
+        auto channelPointer = buffer.getWritePointer (channel);
+        
+        for (int sample = 0; sample < buffer.getNumSamples(); sample++)
+        {
+            auto poppedDelaySample = feedbackPath.popSample (channel, feedbackPath.getDelay());
+            poppedDelaySample = stateVariableFilter.processSample (channel, poppedDelaySample) * 0.5 ;
+            
+            auto currentSample = channelPointer [sample];
+            channelPointer[sample] = ((poppedDelaySample * 0.8) + (currentSample)) * 0.5;
+        }
+    }
+    
+    juce::dsp::AudioBlock<float> gainBlock (buffer);
+    juce::dsp::ProcessContextReplacing<float> driveContext (gainBlock);
+    inputDriveProcessor.process (driveContext);
+    waveShaper.process (driveContext);
+    
+    for (int channel = 0; channel < buffer.getNumChannels(); channel++)
+    {
+        auto channelPointer = buffer.getWritePointer (channel);
+        
+        for (int sample = 0; sample < buffer.getNumSamples(); sample++)
+        {
+            auto currentSample = channelPointer [sample]; // Feedback Amount Control
+            feedbackPath.pushSample (channel, currentSample);
+        }
+    }
+    
+    juce::dsp::AudioBlock<float> outputBlock (buffer);
+    juce::dsp::ProcessContextReplacing<float> outputGainContext (outputBlock);
+    outputGain.process (outputGainContext);
+    
+    juce::dsp::AudioBlock<float> wetSampleBlock (buffer);
+    mixControl.mixWetSamples (wetSampleBlock);
 }
 
 bool DistortionPluginAudioProcessor::hasEditor() const
@@ -250,32 +171,61 @@ bool DistortionPluginAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
+juce::AudioProcessorValueTreeState::ParameterLayout DistortionPluginAudioProcessor::createAPVTSLayout()
 {
-    return new DistortionPluginAudioProcessorEditor (*this,parameters);
+    juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
+    
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", -80.f, 0.0f, 0.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("drive","Drive", -80.f, 24.0f, 0.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("mix", "mix", 0.0f, 1.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("cutt","cutt", 20.f, 20000.0f, 20000.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("q", "q", 0.0f, 10.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterFloat> ("time", "time", 1.f, 10000.0f, 1.0f));
+    parameterLayout.add (std::make_unique<juce::AudioParameterChoice> ("type", "Filter Type", juce::StringArray {"Low Pass", "High Pass", "Band"}, 0));
+
+    return parameterLayout;
 }
 
-//==============================================================================
+void DistortionPluginAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
+{
+    if (parameterID == "gain")
+        outputGain.setGainDecibels (newValue);
+    else if (parameterID == "drive")
+        inputDriveProcessor.setGainDecibels (newValue);
+    else if (parameterID == "mix")
+        mixControl.setWetMixProportion (newValue);
+    else if (parameterID == "cutt")
+        stateVariableFilter.setCutoffFrequency (newValue);
+    else if (parameterID == "q")
+        stateVariableFilter.setResonance (newValue);
+    else if (parameterID == "time")
+        feedbackPath.setDelay (newValue);
+    else if (parameterID == "type")
+        stateVariableFilter.setType ((juce::dsp::StateVariableTPTFilterType) newValue);
+}
+
+juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
+{
+    return new juce::GenericAudioProcessorEditor (*this);
+//    return new DistortionPluginAudioProcessorEditor (*this, parameters);
+}
+
 void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
-{	
+{
 	auto state = parameters.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
-	copyXmlToBinary(*xml,destData);
-
+	copyXmlToBinary (*xml,destData);
 }
 
 void DistortionPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {	
-	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data,sizeInBytes));
+	std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data,sizeInBytes));
 
 	if (xmlState.get() != nullptr)
-		if (xmlState->hasTagName(parameters.state.getType()))
-			parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
-
+		if (xmlState->hasTagName (parameters.state.getType()))
+			parameters.replaceState (juce::ValueTree::fromXml(*xmlState));
 }
 
-//==============================================================================
-// This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new DistortionPluginAudioProcessor();
