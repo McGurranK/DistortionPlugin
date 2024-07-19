@@ -31,8 +31,30 @@ struct Parameters final
         timePtr = parameterValueTree.getParameter (parameterIDS.delayTimeID);
         delayAmount = parameterValueTree.getParameter (parameterIDS.delayfeedBackAmountID);
     }
-
     
+    // Can store the parameter ID's in a vector for this add and remove functionality
+    void LinkParametersToListener (juce::AudioProcessorValueTreeState::Listener* ListenerRef)
+    {
+        parameterValueTree.addParameterListener (parameterIDS.inputGainID, ListenerRef);
+        parameterValueTree.addParameterListener (parameterIDS.mixID, ListenerRef);
+        parameterValueTree.addParameterListener (parameterIDS.filterCuttOffID, ListenerRef);
+        parameterValueTree.addParameterListener (parameterIDS.filterQID, ListenerRef);
+        parameterValueTree.addParameterListener (parameterIDS.filterTypeID, ListenerRef);
+        parameterValueTree.addParameterListener (parameterIDS.delayTimeID, ListenerRef);
+        parameterValueTree.addParameterListener (parameterIDS.delayfeedBackAmountID, ListenerRef);
+    }    
+    
+    void RemoveParameterListener (juce::AudioProcessorValueTreeState::Listener* ListenerRef)
+    {
+        parameterValueTree.removeParameterListener (parameterIDS.inputGainID, ListenerRef);
+        parameterValueTree.removeParameterListener (parameterIDS.mixID, ListenerRef);
+        parameterValueTree.removeParameterListener (parameterIDS.filterCuttOffID, ListenerRef);
+        parameterValueTree.removeParameterListener (parameterIDS.filterQID, ListenerRef);
+        parameterValueTree.removeParameterListener (parameterIDS.filterTypeID, ListenerRef);
+        parameterValueTree.removeParameterListener (parameterIDS.delayTimeID, ListenerRef);
+        parameterValueTree.removeParameterListener (parameterIDS.delayfeedBackAmountID, ListenerRef);
+    }
+
     AteParameterIDs parameterIDS;
     juce::AudioProcessorValueTreeState parameterValueTree;
   
