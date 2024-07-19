@@ -1,6 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "AteParameters.h"
+#include "algorithm.h"
 
 class DistortionPluginAudioProcessor final : public juce::AudioProcessor
                                            , public juce::AudioProcessorValueTreeState::Listener
@@ -52,6 +54,8 @@ private:
     
     juce::dsp::StateVariableTPTFilter<float> stateVariableFilter;
     juce::dsp::StateVariableTPTFilter<float> svfBandFilter;
+    
+    juce::dsp::Oscillator<float> modulation { [](float Frequency){ return std::sin (Frequency); } };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
 };
