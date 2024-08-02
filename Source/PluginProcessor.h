@@ -5,7 +5,6 @@
 #include "algorithm.h"
 
 class DistortionPluginAudioProcessor final : public juce::AudioProcessor
-                                           , public juce::AudioProcessorValueTreeState::Listener
 {
 public:
 	DistortionPluginAudioProcessor();
@@ -36,26 +35,9 @@ public:
 	void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    void parameterChanged (const juce::String& parameterID, float newValue) final;
-
-    juce::AudioProcessorValueTreeState::ParameterLayout createAPVTSLayout();
-
 private:
-    juce::dsp::DryWetMixer<float> mixControl;
-    
-    juce::dsp::Gain<float> inputDriveProcessor;
-    juce::dsp::WaveShaper<float> waveShaper;
-    
-    juce::dsp::Gain<float> outputGain;
-    
-    juce::dsp::DelayLine<float> feedbackPath;
-    
-	juce::AudioProcessorValueTreeState parameters;
-    
-    juce::dsp::StateVariableTPTFilter<float> stateVariableFilter;
-    juce::dsp::StateVariableTPTFilter<float> svfBandFilter;
-    
-    juce::dsp::Oscillator<float> modulation { [](float Frequency){ return std::sin (Frequency); } };
+    Parameters algorithmParameters;
+    AteAlgorithm dspAlgorithm;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
 };
