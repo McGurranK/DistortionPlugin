@@ -24,6 +24,17 @@ struct Parameters final
 {
     Parameters (juce::AudioProcessor& ProcessorRef) : parameterValueTree (ProcessorRef, nullptr, "PARAMS", createLayout())
     {
+        inputGainPtr = parameterValueTree.getParameter (parameterIDS.inputGainID);
+        mixPtr = parameterValueTree.getParameter (parameterIDS.mixID);
+
+        cuttoffPtr = parameterValueTree.getParameter (parameterIDS.filterCuttOffID);
+        qPtr = parameterValueTree.getParameter (parameterIDS.filterQID);
+        filterTypePtr = parameterValueTree.getParameter (parameterIDS.filterTypeID);
+
+        timePtr = parameterValueTree.getParameter (parameterIDS.delayTimeID);
+        delayAmount = parameterValueTree.getParameter (parameterIDS.delayfeedBackAmountID);
+
+        outputGainPtr = parameterValueTree.getParameter (parameterIDS.outputGainID);
     }
     
     void LinkParametersToListener (juce::AudioProcessorValueTreeState::Listener* ListenerRef)
@@ -40,6 +51,18 @@ struct Parameters final
 
     AteParameterIDs parameterIDS;
     juce::AudioProcessorValueTreeState parameterValueTree;
+    
+    
+    juce::RangedAudioParameter* inputGainPtr { nullptr };
+    juce::RangedAudioParameter* outputGainPtr { nullptr };
+    juce::RangedAudioParameter* mixPtr { nullptr };
+
+    juce::RangedAudioParameter* cuttoffPtr { nullptr };
+    juce::RangedAudioParameter* qPtr { nullptr };
+    juce::RangedAudioParameter* filterTypePtr { nullptr };
+
+    juce::RangedAudioParameter* timePtr { nullptr };
+    juce::RangedAudioParameter* delayAmount { nullptr };
     
 private:
     

@@ -4,9 +4,6 @@
 
 #pragma once
 
-/***/
-
-
 class AteAlgorithm final : public juce::AudioProcessorValueTreeState::Listener
 {
 public:
@@ -78,7 +75,7 @@ public:
             for (int sampleIndex = 0; sampleIndex < numberOfSamples; sampleIndex++)
             {
                 auto tempSampleCopy =  channelPointer[sampleIndex];
-                auto delaySample = delayLineProcessor.popSample (channel, currentDelayTime); // todo : change to the delay time when availble
+                auto delaySample = delayLineProcessor.popSample (channel, currentDelayTime);
                 delaySample = stateVariableFilter.processSample (channel, delaySample);
                 
                 delaySample = delayAmountGainProcessor.processSample (delaySample);
