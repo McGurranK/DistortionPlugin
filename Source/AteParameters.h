@@ -16,63 +16,30 @@ struct AteParameterIDs final
     juce::String filterCuttOffID { "CUTT" };
     juce::String filterQID { "Q" };
     juce::String filterTypeID { "TIME" };
+    
+    std::vector<juce::String*> allParameterIDs { &outputGainID, &mixID, &inputGainID, &delayTimeID, &delayfeedBackAmountID, &filterCuttOffID, &filterQID, &filterTypeID};
 };
 
 struct Parameters final
 {
     Parameters (juce::AudioProcessor& ProcessorRef) : parameterValueTree (ProcessorRef, nullptr, "PARAMS", createLayout())
     {
-//        inputGainPtr = parameterValueTree.getParameter (parameterIDS.inputGainID);
-//        mixPtr = parameterValueTree.getParameter (parameterIDS.mixID);
-//        
-//        cuttoffPtr = parameterValueTree.getParameter (parameterIDS.filterCuttOffID);
-//        qPtr = parameterValueTree.getParameter (parameterIDS.filterQID);
-//        filterTypePtr = parameterValueTree.getParameter (parameterIDS.filterTypeID);
-//        
-//        timePtr = parameterValueTree.getParameter (parameterIDS.delayTimeID);
-//        delayAmount = parameterValueTree.getParameter (parameterIDS.delayfeedBackAmountID);
-//        
-//        outputGainPtr = parameterValueTree.getParameter (parameterIDS.outputGainID);
     }
     
-    // Can store the parameter ID's in a vector for this add and remove functionality
     void LinkParametersToListener (juce::AudioProcessorValueTreeState::Listener* ListenerRef)
     {
-        parameterValueTree.addParameterListener (parameterIDS.inputGainID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.mixID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.filterCuttOffID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.filterQID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.filterTypeID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.delayTimeID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.delayfeedBackAmountID, ListenerRef);
-        parameterValueTree.addParameterListener (parameterIDS.outputGainID, ListenerRef);
+        for (auto* ParameterIDs : parameterIDS.allParameterIDs)
+            parameterValueTree.addParameterListener (*ParameterIDs, ListenerRef);
     }
     
     void RemoveParameterListener (juce::AudioProcessorValueTreeState::Listener* ListenerRef)
     {
-        parameterValueTree.removeParameterListener (parameterIDS.inputGainID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.mixID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.filterCuttOffID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.filterQID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.filterTypeID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.delayTimeID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.delayfeedBackAmountID, ListenerRef);
-        parameterValueTree.removeParameterListener (parameterIDS.outputGainID, ListenerRef);
+        for (auto* ParameterIDs : parameterIDS.allParameterIDs)
+            parameterValueTree.removeParameterListener (*ParameterIDs, ListenerRef);
     }
 
     AteParameterIDs parameterIDS;
     juce::AudioProcessorValueTreeState parameterValueTree;
-  
-//    juce::RangedAudioParameter* inputGainPtr { nullptr };
-//    juce::RangedAudioParameter* outputGainPtr { nullptr };
-//    juce::RangedAudioParameter* mixPtr { nullptr };
-//
-//    juce::RangedAudioParameter* cuttoffPtr { nullptr };
-//    juce::RangedAudioParameter* qPtr { nullptr };
-//    juce::RangedAudioParameter* filterTypePtr { nullptr };
-//    
-//    juce::RangedAudioParameter* timePtr { nullptr };
-//    juce::RangedAudioParameter* delayAmount { nullptr };
     
 private:
     
