@@ -17,6 +17,11 @@
       <FILE id="W3aWcs" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="KEl9Q1" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="O0wlHA" name="FifoGUIBuffer.h" compile="0" resource="0" file="Source/FifoGUIBuffer.h"/>
+      <FILE id="WaZeEQ" name="WaveformVisualiser.cpp" compile="1" resource="0"
+            file="Source/WaveformVisualiser.cpp"/>
+      <FILE id="RbyGO2" name="WaveformVisualiser.h" compile="0" resource="0"
+            file="Source/WaveformVisualiser.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

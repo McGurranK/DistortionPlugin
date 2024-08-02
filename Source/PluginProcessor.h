@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "AteParameters.h"
 #include "algorithm.h"
+#include "FifoGUIBuffer.h"
 
 class DistortionPluginAudioProcessor final : public juce::AudioProcessor
 {
