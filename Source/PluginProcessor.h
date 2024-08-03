@@ -1,3 +1,7 @@
+/*
+* Atesh Plugin Processor
+*/
+
 #pragma once
 
 #include <JuceHeader.h>
@@ -6,11 +10,11 @@
 #include "FifoGUIBuffer.h"
 #include "WaveformVisualiser.h"
 
-class DistortionPluginAudioProcessor final : public juce::AudioProcessor
+class AteshAudioProcessor final : public juce::AudioProcessor
 {
 public:
-	DistortionPluginAudioProcessor();
-    ~DistortionPluginAudioProcessor() override = default;
+	AteshAudioProcessor();
+    ~AteshAudioProcessor() override = default;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -37,11 +41,11 @@ public:
 	void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    // AteshFiFo waveformVisualiserFifo;
+    AteshFiFo waveformVisualiserFifo;
     
 private:
     Parameters algorithmParameters;
     AteAlgorithm dspAlgorithm;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioProcessor)
 };

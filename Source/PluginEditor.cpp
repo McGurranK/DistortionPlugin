@@ -1,6 +1,6 @@
 #include "PluginEditor.h"
 
-AteshAudioEditor::AteshAudioEditor (DistortionPluginAudioProcessor& ProcessorRef)
+AteshAudioEditor::AteshAudioEditor (AteshAudioProcessor& ProcessorRef)
     : juce::AudioProcessorEditor (&ProcessorRef)
     , audioProcessor (ProcessorRef)
 {

@@ -52,7 +52,6 @@ struct Parameters final
     AteParameterIDs parameterIDS;
     juce::AudioProcessorValueTreeState parameterValueTree;
     
-    
     juce::RangedAudioParameter* inputGainPtr { nullptr };
     juce::RangedAudioParameter* outputGainPtr { nullptr };
     juce::RangedAudioParameter* mixPtr { nullptr };
@@ -65,7 +64,6 @@ struct Parameters final
     juce::RangedAudioParameter* delayAmount { nullptr };
     
 private:
-    
     juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     {
         juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;

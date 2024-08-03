@@ -1,10 +1,9 @@
 /*
- * GUI implementation
+ * Atesh main GUI component
  */
 
 #pragma once
 
-#include <JuceHeader.h>
 #include "PluginProcessor.h"
 
 class AtesLookAndFeel final : public juce::LookAndFeel_V4
@@ -27,7 +26,7 @@ public:
 class AteshAudioEditor : public juce::AudioProcessorEditor
 {
 public:
-    explicit AteshAudioEditor (DistortionPluginAudioProcessor& ProcessorRef);
+    explicit AteshAudioEditor (AteshAudioProcessor& ProcessorRef);
     ~AteshAudioEditor() override = default;
 
     void paint (juce::Graphics& GraphicsRef) override;
@@ -45,6 +44,6 @@ private:
     juce::Slider filterCuttoff { juce::Slider::Rotary, juce::Slider::NoTextBox };
     juce::Slider filterQ { juce::Slider::Rotary, juce::Slider::NoTextBox };
 
-    DistortionPluginAudioProcessor& audioProcessor;
+    AteshAudioProcessor& audioProcessor;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioEditor);
 };

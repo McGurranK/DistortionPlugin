@@ -1,77 +1,80 @@
+/*
+* Atesh Plugin Processor
+*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
+AteshAudioProcessor::AteshAudioProcessor()
      : AudioProcessor (BusesProperties()
                        .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
-    // , waveformVisualiserFifo (10000)
+    , waveformVisualiserFifo (10000)
     , algorithmParameters (*this)
     , dspAlgorithm (algorithmParameters)
 {
 }
 
 //==============================================================================
-const juce::String DistortionPluginAudioProcessor::getName() const
+const juce::String AteshAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool DistortionPluginAudioProcessor::acceptsMidi() const
+bool AteshAudioProcessor::acceptsMidi() const
 {
     return false;
 }
 
-bool DistortionPluginAudioProcessor::producesMidi() const
+bool AteshAudioProcessor::producesMidi() const
 {
     return false;
 }
 
-bool DistortionPluginAudioProcessor::isMidiEffect() const
+bool AteshAudioProcessor::isMidiEffect() const
 {
     return false;
 }
 
-double DistortionPluginAudioProcessor::getTailLengthSeconds() const
+double AteshAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int DistortionPluginAudioProcessor::getNumPrograms()
+int AteshAudioProcessor::getNumPrograms()
 {
     return 1;
 }
 
-int DistortionPluginAudioProcessor::getCurrentProgram()
+int AteshAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void DistortionPluginAudioProcessor::setCurrentProgram (int)
+void AteshAudioProcessor::setCurrentProgram (int)
 {
 }
 
-const juce::String DistortionPluginAudioProcessor::getProgramName (int)
+const juce::String AteshAudioProcessor::getProgramName (int)
 {
 	return {};
 }
 
-void DistortionPluginAudioProcessor::changeProgramName (int , const juce::String&)
+void AteshAudioProcessor::changeProgramName (int , const juce::String&)
 {
 }
 
 //==============================================================================
-void DistortionPluginAudioProcessor::prepareToPlay (double sampleRate, int maximumExpectedSamplesPerBlock)
+void AteshAudioProcessor::prepareToPlay (double sampleRate, int maximumExpectedSamplesPerBlock)
 {
     dspAlgorithm.prepare (sampleRate, maximumExpectedSamplesPerBlock, getTotalNumOutputChannels());
 }
 
-void DistortionPluginAudioProcessor::releaseResources()
+void AteshAudioProcessor::releaseResources()
 {
 }
 
-bool DistortionPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool AteshAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
@@ -83,31 +86,30 @@ bool DistortionPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& 
     return true;
 }
 
-void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
+void AteshAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     dspAlgorithm.process (buffer, midi);
-    // waveformVisualiserFifo.addToFifo (buffer);
+    waveformVisualiserFifo.addToFifo (buffer);
 }
 
-bool DistortionPluginAudioProcessor::hasEditor() const
+bool AteshAudioProcessor::hasEditor() const
 {
-    return false;
+    return true;
 }
 
-juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
+juce::AudioProcessorEditor* AteshAudioProcessor::createEditor()
 {
-    return nullptr;
-//    return new DistortionPluginAudioProcessorEditor (*this, algorithmParameters.parameterValueTree, algorithmParameters.parameterIDS);
+    return new AteshAudioEditor (*this);
 }
 
-void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
+void AteshAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
     auto state = algorithmParameters.parameterValueTree.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary (*xml,destData);
 }
 
-void DistortionPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void AteshAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {	
 	std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data,sizeInBytes));
 
@@ -118,5 +120,5 @@ void DistortionPluginAudioProcessor::setStateInformation (const void* data, int 
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new DistortionPluginAudioProcessor();
+    return new AteshAudioProcessor();
 }
