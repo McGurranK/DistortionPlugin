@@ -5,7 +5,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+#include "PluginProcessor.h"
 
 class AtesLookAndFeel final : public juce::LookAndFeel_V4
 {
@@ -24,22 +24,16 @@ public:
     }
 };
 
-class DistortionPluginAudioProcessorEditor final : public juce::AudioProcessorEditor
+class AteshAudioEditor : public juce::AudioProcessorEditor
 {
 public:
-    DistortionPluginAudioProcessorEditor (DistortionPluginAudioProcessor&
-                                          , juce::AudioProcessorValueTreeState& vts
-                                          , AteParameterIDs& ParameterIDS);
-    ~DistortionPluginAudioProcessorEditor() override = default;
+    explicit AteshAudioEditor (DistortionPluginAudioProcessor& ProcessorRef);
+    ~AteshAudioEditor() override = default;
 
     void paint (juce::Graphics& GraphicsRef) override;
     void resized() override;
-
-	typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
     
 private:
-    AtesLookAndFeel LookAndFeel;
-    
 	juce::Slider gainSlider		{ juce::Slider::Rotary, juce::Slider::NoTextBox };
     juce::Slider driveSlider    { juce::Slider::Rotary, juce::Slider::NoTextBox };
     juce::Slider mixSlider      { juce::Slider::Rotary, juce::Slider::NoTextBox };
@@ -50,15 +44,7 @@ private:
     
     juce::Slider filterCuttoff { juce::Slider::Rotary, juce::Slider::NoTextBox };
     juce::Slider filterQ { juce::Slider::Rotary, juce::Slider::NoTextBox };
-    
-	std::unique_ptr<SliderAttachment> gainAttachment;
-	std::unique_ptr<SliderAttachment> driveAttachment;
-	std::unique_ptr<SliderAttachment> mixAttachment;		
-    std::unique_ptr<SliderAttachment> delayTimeAttachment;
-    std::unique_ptr<SliderAttachment> delayFeedbackAttachment;
-    std::unique_ptr<SliderAttachment> cuttoffAttachment;
-    std::unique_ptr<SliderAttachment> filterQAttachment;
 
     DistortionPluginAudioProcessor& audioProcessor;
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessorEditor);
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioEditor);
 };

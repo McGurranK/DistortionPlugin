@@ -4,6 +4,7 @@
 #include "AteParameters.h"
 #include "algorithm.h"
 #include "FifoGUIBuffer.h"
+#include "WaveformVisualiser.h"
 
 class DistortionPluginAudioProcessor final : public juce::AudioProcessor
 {
@@ -35,6 +36,8 @@ public:
 
 	void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    // AteshFiFo waveformVisualiserFifo;
     
 private:
     Parameters algorithmParameters;

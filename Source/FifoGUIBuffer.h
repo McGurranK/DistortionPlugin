@@ -3,7 +3,6 @@
 */
 
 #pragma once
-#include <JuceHeader.h>
 
 class AteshFiFo final
 {
@@ -35,7 +34,7 @@ public:
         
         if (scopedWriter.blockSize1 != 0)
         {
-            for (int bufferIndex = 0; bufferIndex <= scopedWriter.blockSize1; bufferIndex++)
+            for (int bufferIndex = 0; bufferIndex < scopedWriter.blockSize1; bufferIndex++)
             {
                 auto& currentIndex = samplesBuffer.at (scopedWriter.startIndex1 + bufferIndex);
                 currentIndex = AudioBuffer.getSample (0, bufferIndex);
@@ -43,7 +42,7 @@ public:
         }
         if (scopedWriter.blockSize2 != 0)
         {
-            for (int bufferIndex = 0; bufferIndex <= scopedWriter.blockSize2 ; bufferIndex++)
+            for (int bufferIndex = 0; bufferIndex < scopedWriter.blockSize2 ; bufferIndex++)
             {
                 auto& currentIndex = samplesBuffer.at (scopedWriter.startIndex2 + bufferIndex);
                 currentIndex = AudioBuffer.getSample (0, bufferIndex + scopedWriter.blockSize1);
@@ -60,20 +59,19 @@ public:
         
         if (scopedReader.blockSize1 != 0)
         {
-            for (int bufferIndex = 0; bufferIndex <= scopedReader.blockSize1; bufferIndex++)
-                ReadBufferRef.emplace_back (samplesBuffer.at (scopedReader.startIndex1 + bufferIndex));
+            for (int bufferIndex = 0; bufferIndex < scopedReader.blockSize1; bufferIndex++)
+                ReadBufferRef.at (bufferIndex)  = (samplesBuffer.at (scopedReader.startIndex1 + bufferIndex));
         }
         
         if (scopedReader.blockSize2 != 0)
         {
-            for (int bufferIndex = 0; bufferIndex <= scopedReader.blockSize2; bufferIndex++)
-                ReadBufferRef.emplace_back (samplesBuffer.at (scopedReader.blockSize2 + bufferIndex));
+            for (int bufferIndex = 0; bufferIndex < scopedReader.blockSize2; bufferIndex++)
+                ReadBufferRef.at (bufferIndex + scopedReader.blockSize1) = (samplesBuffer.at (scopedReader.blockSize2 + bufferIndex));
         }
         
         return static_cast<int> (scopedReader.blockSize1 + scopedReader.blockSize2);
     }
     
-private:
     std::atomic_bool readyToWrite { false };
     
     juce::AbstractFifo readAndWriteIndex { 1024 };

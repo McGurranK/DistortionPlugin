@@ -1,14 +1,12 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 
 DistortionPluginAudioProcessor::DistortionPluginAudioProcessor()
      : AudioProcessor (BusesProperties()
                        .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
+    // , waveformVisualiserFifo (10000)
     , algorithmParameters (*this)
     , dspAlgorithm (algorithmParameters)
 {
@@ -88,16 +86,18 @@ bool DistortionPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& 
 void DistortionPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     dspAlgorithm.process (buffer, midi);
+    // waveformVisualiserFifo.addToFifo (buffer);
 }
 
 bool DistortionPluginAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return false;
 }
 
 juce::AudioProcessorEditor* DistortionPluginAudioProcessor::createEditor()
 {
-    return new DistortionPluginAudioProcessorEditor (*this, algorithmParameters.parameterValueTree, algorithmParameters.parameterIDS);
+    return nullptr;
+//    return new DistortionPluginAudioProcessorEditor (*this, algorithmParameters.parameterValueTree, algorithmParameters.parameterIDS);
 }
 
 void DistortionPluginAudioProcessor::getStateInformation(juce::MemoryBlock& destData)

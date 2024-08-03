@@ -4,7 +4,7 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               cppLanguageStandard="20" pluginManufacturer="DevekusuDevices"
               version="1.0.0" companyName="Deveku&#351;u Devices" pluginFormats="buildAU,buildVST3"
-              pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginName="Ate&#351;"
+              pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginName="Ate"
               pluginDesc="Destroyer of audio">
   <MAINGROUP id="RsCQxL" name="Ate">
     <GROUP id="{D6B369B9-C447-CCD9-033D-CDFBF43F7978}" name="Source">
