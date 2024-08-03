@@ -6,24 +6,7 @@
               version="1.0.0" companyName="Deveku&#351;u Devices" pluginFormats="buildAU,buildVST3"
               pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginName="Ate"
               pluginDesc="Destroyer of audio">
-  <MAINGROUP id="RsCQxL" name="Ate">
-    <GROUP id="{D6B369B9-C447-CCD9-033D-CDFBF43F7978}" name="Source">
-      <FILE id="YbDY00" name="algorithm.h" compile="0" resource="0" file="Source/algorithm.h"/>
-      <FILE id="hxFiTZ" name="AteParameters.h" compile="0" resource="0" file="Source/AteParameters.h"/>
-      <FILE id="oagmrt" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="ujzZv1" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
-      <FILE id="W3aWcs" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="KEl9Q1" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="O0wlHA" name="FifoGUIBuffer.h" compile="0" resource="0" file="Source/FifoGUIBuffer.h"/>
-      <FILE id="WaZeEQ" name="WaveformVisualiser.cpp" compile="1" resource="0"
-            file="Source/WaveformVisualiser.cpp"/>
-      <FILE id="RbyGO2" name="WaveformVisualiser.h" compile="0" resource="0"
-            file="Source/WaveformVisualiser.h"/>
-    </GROUP>
-  </MAINGROUP>
+  <MAINGROUP id="RsCQxL" name="Ate"/>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
@@ -45,10 +28,12 @@
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
         <MODULEPATH id="juce_gui_extra" path="../../juce"/>
         <MODULEPATH id="juce_dsp" path="../../JUCE/modules"/>
+        <MODULEPATH id="atesh_module" path="."/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
   <MODULES>
+    <MODULE id="atesh_module" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>

@@ -1,4 +1,6 @@
-#include "PluginEditor.h"
+/*
+* Atesh main GUI component
+*/
 
 AteshAudioEditor::AteshAudioEditor (AteshAudioProcessor& ProcessorRef)
     : juce::AudioProcessorEditor (&ProcessorRef)

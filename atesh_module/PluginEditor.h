@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "PluginProcessor.h"
-
 class AtesLookAndFeel final : public juce::LookAndFeel_V4
 {
 public:

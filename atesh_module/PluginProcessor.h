@@ -4,12 +4,6 @@
 
 #pragma once
 
-#include <JuceHeader.h>
-#include "AteParameters.h"
-#include "algorithm.h"
-#include "FifoGUIBuffer.h"
-#include "WaveformVisualiser.h"
-
 class AteshAudioProcessor final : public juce::AudioProcessor
 {
 public:

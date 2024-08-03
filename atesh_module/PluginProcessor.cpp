@@ -2,9 +2,6 @@
 * Atesh Plugin Processor
 */
 
-#include "PluginProcessor.h"
-#include "PluginEditor.h"
-
 AteshAudioProcessor::AteshAudioProcessor()
      : AudioProcessor (BusesProperties()
                        .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
