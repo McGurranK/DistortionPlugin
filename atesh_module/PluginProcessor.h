@@ -1,13 +1,14 @@
+/*
+* Atesh Plugin Processor
+*/
+
 #pragma once
 
-#include <JuceHeader.h>
-
-class DistortionPluginAudioProcessor final : public juce::AudioProcessor
-                                           , public juce::AudioProcessorValueTreeState::Listener
+class AteshAudioProcessor final : public juce::AudioProcessor
 {
 public:
-	DistortionPluginAudioProcessor();
-    ~DistortionPluginAudioProcessor() override = default;
+	AteshAudioProcessor();
+    ~AteshAudioProcessor() override = default;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -34,24 +35,11 @@ public:
 	void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    void parameterChanged (const juce::String& parameterID, float newValue) final;
-
-    juce::AudioProcessorValueTreeState::ParameterLayout createAPVTSLayout();
-
+    AteshFiFo waveformVisualiserFifo;
+    
 private:
-    juce::dsp::DryWetMixer<float> mixControl;
-    
-    juce::dsp::Gain<float> inputDriveProcessor;
-    juce::dsp::WaveShaper<float> waveShaper;
-    
-    juce::dsp::Gain<float> outputGain;
-    
-    juce::dsp::DelayLine<float> feedbackPath;
-    
-	juce::AudioProcessorValueTreeState parameters;
-    
-    juce::dsp::StateVariableTPTFilter<float> stateVariableFilter;
-    juce::dsp::StateVariableTPTFilter<float> svfBandFilter;
+    Parameters algorithmParameters;
+    AteAlgorithm dspAlgorithm;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPluginAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioProcessor)
 };
