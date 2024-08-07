@@ -13,6 +13,8 @@ public:
         
         delayLineProcessor.setMaximumDelayInSamples (48000);
         delayLineProcessor.setDelay (1000);
+        
+        waveShaperProcessor.functionToUse = [](float value) {return std::tanh (value); };
     }
     
     ~AteAlgorithm ()
@@ -26,9 +28,9 @@ public:
         if (ParameterID == dspParameters.parameterIDS.inputGainID)
             inputDriveProcessor.setGainDecibels (NewValue);
         if (ParameterID == dspParameters.parameterIDS.mixID)
-            mixProcessor.setWetMixProportion (NewValue / 100.f); // Parameter uses the displayed value of 0-100
+            mixProcessor.setWetMixProportion (NewValue / 100.f);
         if (ParameterID == dspParameters.parameterIDS.delayTimeID)
-            delayLineProcessor.setDelay (NewValue);
+            delayTimeSmoothing.setTargetValue (NewValue);
         if (ParameterID == dspParameters.parameterIDS.delayfeedBackAmountID)
             delayAmountGainProcessor.setGainDecibels (NewValue);
         if (ParameterID == dspParameters.parameterIDS.filterCuttOffID)
@@ -43,6 +45,8 @@ public:
     {
         juce::dsp::ProcessSpec spec { SampleRate, BlockSize, NumberOfChannels };
         
+        delayTimeSmoothing.reset (SampleRate, 0.05f);
+        
         mixProcessor.prepare (spec);
         inputDriveProcessor.prepare (spec);
         waveShaperProcessor.prepare (spec);
@@ -52,63 +56,64 @@ public:
         outputGainProcessor.prepare (spec);
     }
     
-    void process (juce::AudioBuffer<float> AudioBuffer, juce::MidiBuffer& MidiMessages)
+    void process (juce::AudioBuffer<float>& AudioBuffer, juce::MidiBuffer& MidiMessages)
     {
-//        juce::ignoreUnused (MidiMessages);
-//        
-//        const auto numberOfChannels = AudioBuffer.getNumChannels();
-//        const auto numberOfSamples = AudioBuffer.getNumSamples();
-//        
-//        const auto currentDelayTime = dspParameters.timePtr->getValue();
-//        
-//        juce::dsp::AudioBlock<float> audioBlock;
-//        juce::dsp::ProcessContextReplacing<float> processorContext (audioBlock);
-//        
-//        mixProcessor.pushDrySamples (audioBlock);
-//        inputDriveProcessor.process (processorContext);
-//        
-//        // Delay pop, gain and filter
-//        for (int channel = 0; channel < numberOfChannels; channel++)
-//        {
-//            const auto channelPointer = AudioBuffer.getWritePointer (channel);
-//            
-//            for (int sampleIndex = 0; sampleIndex < numberOfSamples; sampleIndex++)
-//            {
-//                auto tempSampleCopy =  channelPointer[sampleIndex];
-//                auto delaySample = delayLineProcessor.popSample (channel, currentDelayTime);
-//                delaySample = stateVariableFilter.processSample (channel, delaySample);
-//                
-//                delaySample = delayAmountGainProcessor.processSample (delaySample);
-//                
-//                channelPointer[sampleIndex] = tempSampleCopy + delaySample;
-//            }
-//        }
-//        
-//        waveShaperProcessor.process (processorContext); // Implement filters around this
-//        
-//        // Delay Push
-//        for (int channel = 0; channel < numberOfChannels; channel++)
-//        {
-//            const auto channelPointer = AudioBuffer.getWritePointer (channel);
-//            
-//            for (int sampleIndex = 0; sampleIndex < numberOfSamples; sampleIndex++)
-//                delayLineProcessor.pushSample (channel, channelPointer [sampleIndex]);
-//        }
-//        
-//        juce::dsp::AudioBlock<float> wetSampleBlock (AudioBuffer);
-//        mixProcessor.mixWetSamples (wetSampleBlock);
-//        
-//        juce::dsp::AudioBlock<float> outputBlock;
-//        juce::dsp::ProcessContextReplacing<float> outputContext (outputBlock);
-//        outputGainProcessor.process (outputContext);
+        const auto numberOfChannels = AudioBuffer.getNumChannels();
+        const auto numberOfSamples = AudioBuffer.getNumSamples();
+        
+        const auto currentDelayTime = delayTimeSmoothing.getNextValue();
+        
+        juce::dsp::AudioBlock<float> audioBlock (AudioBuffer);
+        juce::dsp::ProcessContextReplacing<float> processorContext (audioBlock);
+        
+        mixProcessor.pushDrySamples (audioBlock);
+        inputDriveProcessor.process (processorContext);
+        
+        // Delay pop, gain and filter
+        for (int channel = 0; channel < numberOfChannels; channel++)
+        {
+            const auto channelPointer = AudioBuffer.getWritePointer (channel);
+            
+            for (int sampleIndex = 0; sampleIndex < numberOfSamples; sampleIndex++)
+            {
+                auto tempSampleCopy =  channelPointer[sampleIndex];
+                auto delaySample = delayLineProcessor.popSample (channel, currentDelayTime);
+                delaySample = stateVariableFilter.processSample (channel, delaySample);
+                
+                delaySample = delayAmountGainProcessor.processSample (delaySample);
+                
+                channelPointer[sampleIndex] = tempSampleCopy + delaySample;
+            }
+        }
+        
+        juce::dsp::AudioBlock<float> waveBlock (AudioBuffer);
+        juce::dsp::ProcessContextReplacing<float> waveShapingContext (waveBlock);
+        waveShaperProcessor.process (waveShapingContext); // Implement filters around this
+        
+        // Delay Push
+        for (int channel = 0; channel < numberOfChannels; channel++)
+        {
+            const auto channelPointer = AudioBuffer.getWritePointer (channel);
+            
+            for (int sampleIndex = 0; sampleIndex < numberOfSamples; sampleIndex++)
+                delayLineProcessor.pushSample (channel, channelPointer [sampleIndex]);
+        }
+
+        juce::dsp::AudioBlock<float> outputBlock (AudioBuffer);
+        juce::dsp::ProcessContextReplacing<float> outputContext (outputBlock);
+        
+        mixProcessor.mixWetSamples (audioBlock);
+        outputGainProcessor.process (outputContext);
     }
 
+    juce::SmoothedValue<float> delayTimeSmoothing;
+    
     Parameters& dspParameters;
     
+    juce::dsp::Gain<float> inputDriveProcessor;
     juce::dsp::Gain<float> outputGainProcessor;
     juce::dsp::DryWetMixer<float> mixProcessor;
-    
-    juce::dsp::Gain<float> inputDriveProcessor;
+
     juce::dsp::WaveShaper<float> waveShaperProcessor;
     
     juce::dsp::Gain<float> delayAmountGainProcessor;
