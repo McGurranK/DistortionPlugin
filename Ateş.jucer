@@ -3,11 +3,12 @@
 <JUCERPROJECT id="skbmTt" name="Ate" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               cppLanguageStandard="20" pluginManufacturer="DevekusuDevices"
-              version="1.0.0" companyName="Deveku&#351;u Devices" pluginFormats="buildAU,buildVST3"
+              version="1.0.0" companyName="Deveku&#351;u Devices" pluginFormats="buildAU,buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginName="Ate"
               pluginDesc="Destroyer of audio">
   <MAINGROUP id="RsCQxL" name="Ate"/>
-  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
+               JUCE_ENABLE_LIVE_CONSTANT_EDITOR="1"/>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>

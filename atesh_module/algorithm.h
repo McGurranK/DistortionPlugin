@@ -61,8 +61,6 @@ public:
         const auto numberOfChannels = AudioBuffer.getNumChannels();
         const auto numberOfSamples = AudioBuffer.getNumSamples();
         
-        const auto currentDelayTime = delayTimeSmoothing.getNextValue();
-        
         juce::dsp::AudioBlock<float> audioBlock (AudioBuffer);
         juce::dsp::ProcessContextReplacing<float> processorContext (audioBlock);
         
@@ -77,7 +75,7 @@ public:
             for (int sampleIndex = 0; sampleIndex < numberOfSamples; sampleIndex++)
             {
                 auto tempSampleCopy =  channelPointer[sampleIndex];
-                auto delaySample = delayLineProcessor.popSample (channel, currentDelayTime);
+                auto delaySample = delayLineProcessor.popSample (channel,  delayTimeSmoothing.getNextValue());
                 delaySample = stateVariableFilter.processSample (channel, delaySample);
                 
                 delaySample = delayAmountGainProcessor.processSample (delaySample);
