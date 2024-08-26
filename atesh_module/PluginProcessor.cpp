@@ -99,6 +99,11 @@ juce::AudioProcessorEditor* AteshAudioProcessor::createEditor()
     return new AteshAudioEditor (*this);
 }
 
+juce::RangedAudioParameter& AteshAudioProcessor::getAteshParameter (const juce::String ParameterID)
+{
+    return *algorithmParameters.parameterValueTree.getParameter (ParameterID);
+}
+
 void AteshAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
     auto state = algorithmParameters.parameterValueTree.copyState();

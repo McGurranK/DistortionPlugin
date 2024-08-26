@@ -21,6 +21,15 @@ public:
     }
 };
 
+class RotaryDefault : public juce::Slider
+{
+public:
+    RotaryDefault() : juce::Slider (Rotary, juce::Slider::NoTextBox)
+    {
+        
+    }
+};
+
 class AteshAudioEditor : public juce::AudioProcessorEditor
 {
 public:
@@ -31,16 +40,32 @@ public:
     void resized() override;
     
 private:
-	juce::Slider gainSlider		{ juce::Slider::Rotary, juce::Slider::NoTextBox };
-    juce::Slider driveSlider    { juce::Slider::Rotary, juce::Slider::NoTextBox };
-    juce::Slider mixSlider      { juce::Slider::Rotary, juce::Slider::NoTextBox };
+    RotaryDefault gainSlider;
+    RotaryDefault mixSlider;
     
-    juce::Slider outputGainSlider { juce::Slider::Rotary, juce::Slider::NoTextBox };
-    juce::Slider delayTimeSlider { juce::Slider::Rotary, juce::Slider::NoTextBox };
-    juce::Slider delayFeedbackSlider { juce::Slider::Rotary, juce::Slider::NoTextBox };
+    RotaryDefault outputGainSlider;
     
-    juce::Slider filterCuttoff { juce::Slider::Rotary, juce::Slider::NoTextBox };
-    juce::Slider filterQ { juce::Slider::Rotary, juce::Slider::NoTextBox };
+    RotaryDefault delayTimeSlider;
+    RotaryDefault delayFeedbackSlider;
+    
+    RotaryDefault filterCuttoff;
+    RotaryDefault filterQ;
+    
+    AtesLookAndFeel atesLookAndFeel;
+    
+    std::unique_ptr<juce::SliderParameterAttachment> gainSliderLink;
+    std::unique_ptr<juce::SliderParameterAttachment> mixSliderLink;
+    std::unique_ptr<juce::SliderParameterAttachment> driveSliderLink;
+    
+    std::unique_ptr<juce::SliderParameterAttachment> outputSliderLink;
+    
+    std::unique_ptr<juce::SliderParameterAttachment> delayTimeSliderLink;
+    std::unique_ptr<juce::SliderParameterAttachment> delayFeedbackSliderLink;
+    
+    std::unique_ptr<juce::SliderParameterAttachment> filterCuttoffSliderLink;
+    std::unique_ptr<juce::SliderParameterAttachment> filterQSliderLink;
+    
+    WaveformVisualiser graphVisuliser;
 
     AteshAudioProcessor& audioProcessor;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioEditor);

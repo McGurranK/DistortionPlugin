@@ -41,24 +41,36 @@ void WaveformVisualiser::paint (juce::Graphics& GraphicsRef)
     if (numberOfSamplesPolled != 0)
     {
         waveFormPath.clear();
-        
+ 
         for (int pollingBufferIndex = 0; pollingBufferIndex < numberOfSamplesPolled; pollingBufferIndex++)
         {
-            const auto currentXPosition = xToXPosition (pollingBufferIndex, getWidth(), numberOfSamplesPolled);
-            const auto currentYPosition = sampleValueToYPosition (pollingBuffer.at (pollingBufferIndex));
-
-            juce::Line<float> newLine { previousPosition, { currentXPosition, currentYPosition} };
-            
-            waveFormPath.addLineSegment (newLine, 4.f);
-            previousPosition.setXY (currentXPosition, currentYPosition);
+            if (pollingBufferIndex == 0)
+            {
+                const auto currentYPosition = sampleValueToYPosition (pollingBuffer.at (pollingBufferIndex));
+                
+                juce::Line<float> newLine { { 0.f, static_cast<float> (getWidth() * 0.5f) }, { 0.f, currentYPosition} };
+                waveFormPath.addLineSegment (newLine, 2.f);
+                previousPosition.setXY (0.F, currentYPosition);
+            }
+            else
+            {
+                const auto currentXPosition = xToXPosition (pollingBufferIndex, getWidth(), numberOfSamplesPolled);
+                const auto currentYPosition = sampleValueToYPosition (pollingBuffer.at (pollingBufferIndex));
+                
+                juce::Line<float> newLine { previousPosition, { currentXPosition, currentYPosition} };
+                
+                waveFormPath.addLineSegment (newLine, 1.f);
+                previousPosition.setXY (currentXPosition, currentYPosition);
+                
+                if (pollingBufferIndex + 1 == numberOfSamplesPolled)
+                {
+                    juce::Line<float> closingLine { previousPosition,  {static_cast<float>(getWidth()), static_cast<float> (getHeight() * 0.5)  }};
+                    waveFormPath.addLineSegment (closingLine, 1.f);
+                    previousPosition.setXY (getWidth(), getHeight() * 0.5);
+                }
+            }
         }
-        
-        juce::Line<float> newLine { previousPosition, { static_cast<float>(getWidth()), static_cast<float> (getHeight()) }};
-            
-        //juce::Line<float> leftLine { { static_cast<float>(getWidth()), static_cast<float> (getHeight()) }, { 0.f, static_cast<float> (getHeight()) };
-        
-        // waveFormPath.addLineSegment (newLine, 4.f);
-        // waveFormPath.addLineSegment (leftLine, 4.f);
+
         waveFormPath.closeSubPath();
     }
     
@@ -68,5 +80,6 @@ void WaveformVisualiser::paint (juce::Graphics& GraphicsRef)
 
     
     GraphicsRef.setGradientFill (lineGradient);
+    GraphicsRef.setColour (juce::Colours::white);
     GraphicsRef.fillPath (waveFormPath.createPathWithRoundedCorners (10.f));
 }
