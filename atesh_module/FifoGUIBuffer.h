@@ -1,8 +1,15 @@
 /*
-* Fifo for drawing blocks of audio without it dropping out
+* AteshFiFo.h
 */
 
 #pragma once
+
+/*
+* Fifo for drawing blocks of audio without it dropping out
+*/
+
+// Todo: Unit test this code
+// Todo: Replace the use of vector with juce::AudioBuffer
 
 class AteshFiFo final
 {

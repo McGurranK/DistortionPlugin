@@ -1,8 +1,6 @@
 /*
-* Waveform waveform visualisation
+* WaveformVisualiser.cpp
 */
-
-#pragma once
 
 WaveformVisualiser::WaveformVisualiser (AteshFiFo& BufferRef)
 : waveformBuffer (BufferRef)
@@ -32,8 +30,7 @@ float WaveformVisualiser::xToXPosition (float BufferPosition, float Width, float
     
 void WaveformVisualiser::paint (juce::Graphics& GraphicsRef)
 {
-    GraphicsRef.fillAll (juce::Colours::purple);
-    
+    // Todo: could use juce audio buffer with a clear instead
     std::fill (pollingBuffer.begin(), pollingBuffer.end(), 0.f);
     
     const auto numberOfSamplesPolled = waveformBuffer.readFromFiFo (pollingBuffer);

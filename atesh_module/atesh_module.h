@@ -38,7 +38,10 @@
 #include "algorithm.h"
 #include "FifoGUIBuffer.h"
 
+#include "AteRotary.h"
 #include "waveformVisualiser.h"
+
+#include "AteLookNFeel.h"
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
