@@ -5,5 +5,6 @@
 #include "atesh_module.h"
 
 #include "waveformVisualiser.cpp"
+#include "AteLookNFeel.cpp"
 #include "PluginProcessor.cpp"
 #include "PluginEditor.cpp"

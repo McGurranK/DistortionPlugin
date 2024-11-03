@@ -1,8 +1,12 @@
 /*
- * Plugins DSP
+ * AteAlgorithm.h
  */
 
 #pragma once
+
+/*
+* Contained algorithm with listener callback mechanism
+*/
 
 class AteAlgorithm final : public juce::AudioProcessorValueTreeState::Listener
 {

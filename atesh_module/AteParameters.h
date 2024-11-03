@@ -1,8 +1,12 @@
 /*
-* Ate Parameter struct for easy access to parametes
+* AteParameters.h
 */
 
 #pragma once
+
+/*
+* Ate Parameter struct for easy access to parametes
+*/
 
 struct AteParameterIDs final
 {
@@ -54,7 +58,6 @@ private:
         
         parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.filterCuttOffID,"cutt", 20.f, 20000.0f, 20000.0f));
         parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.filterQID, "q", 0.0f, 10.0f, 1.0f));
-//        parameterLayout.add (std::make_unique<juce::AudioParameterChoice> (parameterIDS.filterTypeID, "Filter Type", juce::StringArray {"Low Pass", "High Pass", "Band"}, 0));
         
         parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.outputGainID, "Output Gain",  -80.f, 10.f, 0.f));
 

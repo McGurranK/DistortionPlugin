@@ -1,5 +1,11 @@
 /*
-* Live Constant for moving constrols
+* ComponentMover.h
+*/
+
+#pragma once
+
+/*
+* GUI utility class for using the live constant to change a components size and position
 */
 
 template <class JuceComponent, typename = typename std::enable_if<std::is_base_of<juce::Component, JuceComponent>::value, JuceComponent>::type>

@@ -7,7 +7,7 @@ AteshAudioEditor::AteshAudioEditor (AteshAudioProcessor& ProcessorRef)
     , graphVisuliser (ProcessorRef.waveformVisualiserFifo)
     , audioProcessor (ProcessorRef)
 {
-    AteParameterIDs ids; // Created to avoid incorrect
+    AteParameterIDs ids; // Created to avoid incorrect use of parameter ID
     
     gainSliderLink.reset (new juce::SliderParameterAttachment (ProcessorRef.getAteshParameter (ids.inputGainID), gainSlider));
     mixSliderLink.reset (new juce::SliderParameterAttachment (ProcessorRef.getAteshParameter (ids.mixID), mixSlider));
@@ -33,13 +33,18 @@ AteshAudioEditor::AteshAudioEditor (AteshAudioProcessor& ProcessorRef)
     
     addAndMakeVisible (filterCuttoff);
     addAndMakeVisible (filterQ);
-
+    
     setSize (700, 400);
+}
+
+AteshAudioEditor::~AteshAudioEditor()
+{
+    setLookAndFeel (nullptr);
 }
 
 void AteshAudioEditor::paint (juce::Graphics& GraphicsRef)
 {
-    GraphicsRef.fillAll (juce::Colours::white);
+    GraphicsRef.fillAll (juce::Colours::black);
 }
 
 void AteshAudioEditor::resized()
@@ -50,6 +55,9 @@ void AteshAudioEditor::resized()
     
     delayTimeSlider.setBounds (320, 0, 150, 150);
     delayFeedbackSlider.setBounds (320, 250, 150, 150);
+    
+    filterCuttoff.setBounds (500, 0, 50, 200);
+    filterQ.setBounds (600, 0, 50, 200);
     
     graphVisuliser.setBounds (480, 220, 220, 200);
 }
