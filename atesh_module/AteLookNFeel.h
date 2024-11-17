@@ -15,4 +15,8 @@ public:
     ~AtesLookAndFeel() override = default;
     
     void drawRotarySlider (juce::Graphics& Graphics, int x, int y, int width, int height, float sliderPosProportional, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& SliderRef) override;
+    
+    void drawLinearSlider (juce::Graphics&, int x, int y, int width, int height,
+                           float sliderPos, float minSliderPos, float maxSliderPos,
+                           juce::Slider::SliderStyle, juce::Slider&) override;
 };

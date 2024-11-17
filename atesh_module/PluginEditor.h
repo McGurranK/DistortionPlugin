@@ -16,7 +16,7 @@ public:
 private:
     AtesLookAndFeel atesLookAndFeel;
     
-    RotaryDefault gainSlider;
+    ComponentMover<RotaryDefault> gainSlider;
     RotaryDefault mixSlider;
     
     RotaryDefault outputGainSlider;
@@ -39,7 +39,8 @@ private:
     std::unique_ptr<juce::SliderParameterAttachment> filterCuttoffSliderLink;
     std::unique_ptr<juce::SliderParameterAttachment> filterQSliderLink;
     
-    WaveformVisualiser graphVisuliser;
+    AteshHeader header;
+    juce::Label pluginName {"Atesh", "Atesh"};
 
     AteshAudioProcessor& audioProcessor;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioEditor);

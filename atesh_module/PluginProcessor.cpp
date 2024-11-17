@@ -6,7 +6,7 @@ AteshAudioProcessor::AteshAudioProcessor()
      : AudioProcessor (BusesProperties()
                        .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
-    , waveformVisualiserFifo (10000)
+    , waveformVisualiserFifo (10000, getTotalNumInputChannels())
     , algorithmParameters (*this)
     , dspAlgorithm (algorithmParameters)
 {

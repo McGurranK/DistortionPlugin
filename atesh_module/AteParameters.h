@@ -50,16 +50,16 @@ private:
     {
         juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout;
     
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.mixID, "Mix", 0.0f, 100.0f, 50.0f));
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.inputGainID, "Drive", -80.f, 40.0f, 0.0f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.mixID, "Mix", juce::NormalisableRange<float> ( 0.0f, 100.0f, 1.f), 50.0f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.inputGainID, "Drive", juce::NormalisableRange<float> ( -80.f, 40.0f, 2.f), 0.0f));
 
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.delayTimeID, "Time", 1.f, 10000.0f, 1.0f));
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.delayfeedBackAmountID, "Feedback Amount", -40.f, 40.0f, 0.0f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.delayTimeID, "Time", juce::NormalisableRange<float> ( 1.f, 1000.f, 10.f), 1.0f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.delayfeedBackAmountID, "Feedback Amount",        juce::NormalisableRange<float> ( -40.f, 40.0f, 1.f), 0.0f));
         
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.filterCuttOffID,"cutt", 20.f, 20000.0f, 20000.0f));
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.filterQID, "q", 0.0f, 10.0f, 1.0f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.filterCuttOffID, "cutt", juce::NormalisableRange<float> ( 20.f, 20000.f, 100.f), 20000.0f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.filterQID, "q", juce::NormalisableRange<float> ( 0.f, 10.f, 0.1), 1.0f));
         
-        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.outputGainID, "Output Gain",  -80.f, 10.f, 0.f));
+        parameterLayout.add (std::make_unique<juce::AudioParameterFloat> (parameterIDS.outputGainID, "Output Gain",  juce::NormalisableRange<float> ( -80.f, 10.f, 1.f), 0.f));
 
         return parameterLayout;
     }
