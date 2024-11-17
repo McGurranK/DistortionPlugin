@@ -4,9 +4,9 @@
 
 WaveformVisualiser::WaveformVisualiser (AteshFiFo& BufferRef)
 : waveformBuffer (BufferRef)
+, pollingAudioBuffer (2, 1024)
 , vBlackAttachment (this, [&]() { repaint (); })
 {
-    pollingBuffer.resize (1024);
     waveFormPath.preallocateSpace (4096);
     
     waveformBuffer.setAtomicFlag (true);
@@ -30,29 +30,31 @@ float WaveformVisualiser::xToXPosition (float BufferPosition, float Width, float
     
 void WaveformVisualiser::paint (juce::Graphics& GraphicsRef)
 {
-    // Todo: could use juce audio buffer with a clear instead
-    std::fill (pollingBuffer.begin(), pollingBuffer.end(), 0.f);
+    auto bounds = getLocalBounds().reduced (5);
     
-    const auto numberOfSamplesPolled = waveformBuffer.readFromFiFo (pollingBuffer);
+    juce::Path clipBorder;
+    clipBorder.addRoundedRectangle (bounds, 5.f);
+    
+    juce::FloatVectorOperations::fill (pollingAudioBuffer.getWritePointer (0), 0.f, 1024);
+    const auto numberOfSamplesPolled = waveformBuffer.readFromFiFo (pollingAudioBuffer);
     
     if (numberOfSamplesPolled != 0)
     {
         waveFormPath.clear();
- 
+        waveFormPath.preallocateSpace (4096);
+        
         for (int pollingBufferIndex = 0; pollingBufferIndex < numberOfSamplesPolled; pollingBufferIndex++)
         {
             if (pollingBufferIndex == 0)
             {
-                const auto currentYPosition = sampleValueToYPosition (pollingBuffer.at (pollingBufferIndex));
-                
-                juce::Line<float> newLine { { 0.f, static_cast<float> (getWidth() * 0.5f) }, { 0.f, currentYPosition} };
-                waveFormPath.addLineSegment (newLine, 2.f);
+                const auto currentYPosition = sampleValueToYPosition (pollingAudioBuffer.getSample(0, pollingBufferIndex));
+                waveFormPath.startNewSubPath (0.f, static_cast<float> (getWidth() * 0.5f) );
                 previousPosition.setXY (0.F, currentYPosition);
             }
             else
             {
                 const auto currentXPosition = xToXPosition (pollingBufferIndex, getWidth(), numberOfSamplesPolled);
-                const auto currentYPosition = sampleValueToYPosition (pollingBuffer.at (pollingBufferIndex));
+                const auto currentYPosition = sampleValueToYPosition (pollingAudioBuffer.getSample(0, pollingBufferIndex));
                 
                 juce::Line<float> newLine { previousPosition, { currentXPosition, currentYPosition} };
                 
@@ -71,12 +73,12 @@ void WaveformVisualiser::paint (juce::Graphics& GraphicsRef)
         waveFormPath.closeSubPath();
     }
     
-    const auto middle = sampleValueToYPosition (0.f);
-    
-    juce::ColourGradient lineGradient (juce::Colours::red, 0.f, middle, juce::Colours::black, static_cast<int> (getWidth()), middle, false);
-
-    
-    GraphicsRef.setGradientFill (lineGradient);
-    GraphicsRef.setColour (juce::Colours::white);
-    GraphicsRef.fillPath (waveFormPath.createPathWithRoundedCorners (10.f));
+    {
+        juce::Graphics::ScopedSaveState saveState (GraphicsRef);
+        GraphicsRef.reduceClipRegion (clipBorder);
+        GraphicsRef.fillAll (juce::Colours::black);
+        
+        GraphicsRef.setColour (juce::Colours::white);
+        GraphicsRef.fillPath (waveFormPath);
+    }
 }

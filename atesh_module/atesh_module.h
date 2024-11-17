@@ -40,6 +40,7 @@
 
 #include "AteRotary.h"
 #include "waveformVisualiser.h"
+#include "AteshToolBar.h"
 
 #include "AteLookNFeel.h"
 

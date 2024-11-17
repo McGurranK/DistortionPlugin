@@ -23,7 +23,8 @@ private:
     
     juce::Point<float> previousPosition { 0.f, 0.f };
     AteshFiFo& waveformBuffer;
-    std::vector<float> pollingBuffer;
+    
+    juce::AudioBuffer<float> pollingAudioBuffer;
     juce::Path waveFormPath;
     
     juce::VBlankAttachment vBlackAttachment;
