@@ -7,7 +7,7 @@ set(DEV_NAME Devekuşu Devices)
 # Project Specific settings
 set(PLUGIN_NAME "Atesh")
 set(PLUGIN_ID ATES)
-project(ATESH VERSION 1.0.0 DESCRIPTION "Ateş project")
+project(ATESH VERSION 1.0.0 DESCRIPTION "Atesh project")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -43,7 +43,7 @@ target_compile_definitions(${PROJECT_NAME}
         JUCE_VST3_CAN_REPLACE_VST2=0
 )
 
-target_link_libraries (${PROJECT_NAME} PUBLIC
+target_link_libraries (${PROJECT_NAME} PRIVATE
                       atesh_module
                       juce::juce_audio_basics
                       juce::juce_audio_devices
