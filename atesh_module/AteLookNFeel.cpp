@@ -11,6 +11,8 @@ AtesLookAndFeel::AtesLookAndFeel()
 
 void AtesLookAndFeel::drawRotarySlider (juce::Graphics& Graphics, int x, int y, int width, int height, float sliderPosProportional, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& SliderRef)
 {
+    juce::ignoreUnused (rotaryStartAngle, rotaryEndAngle);
+    
     const auto backGroundColour = SliderRef.findColour (juce::Slider::ColourIds::backgroundColourId);
     const auto fillColour = SliderRef.findColour (juce::Slider::ColourIds::rotarySliderFillColourId);
     const auto outlineColour = SliderRef.findColour (juce::Slider::ColourIds::rotarySliderOutlineColourId);
@@ -53,6 +55,9 @@ void AtesLookAndFeel::drawRotarySlider (juce::Graphics& Graphics, int x, int y, 
 
 void AtesLookAndFeel::drawLinearSlider (juce::Graphics& GraphicsRef, int x, int y, int width, int height, float sliderPos, float minSliderPos, float maxSliderPos, juce::Slider::SliderStyle, juce::Slider& SliderRef)
 {
+    juce::ignoreUnused (x, y, height);
+    juce::ignoreUnused (minSliderPos, maxSliderPos, sliderPos);
+    
     const auto backGroundColour = SliderRef.findColour (juce::Slider::ColourIds::backgroundColourId);
     const auto fillColour = SliderRef.findColour (juce::Slider::ColourIds::rotarySliderFillColourId);
     const auto outlineColour = SliderRef.findColour (juce::Slider::ColourIds::rotarySliderOutlineColourId);

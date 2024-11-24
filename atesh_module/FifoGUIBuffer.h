@@ -14,7 +14,7 @@
 class AteshFiFo final
 {
 public:
-    AteshFiFo (int BufferSize, unsigned int NumberOfChannels);
+    AteshFiFo (int BufferSize, int NumberOfChannels);
     
     void setAtomicFlag (bool StartDrawing);
     
@@ -28,6 +28,4 @@ private:
     juce::AbstractFifo readAndWriteIndex { 1024 };
     
     juce::AudioBuffer<float> internalSamplesBuffer;
-    
-    std::vector<float> samplesBuffer;
 };

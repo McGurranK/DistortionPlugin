@@ -19,9 +19,18 @@ public:
         delayLineProcessor.setDelay (1000);
         
         waveShaperProcessor.functionToUse = [](float value) {return std::tanh (value); };
+        
+        inputDriveProcessor.setGainDecibels (0.f);
+        mixProcessor.setWetMixProportion (0.5f);
+        delayTimeSmoothing.setTargetValue (1000);
+        delayAmountGainProcessor.setGainDecibels (-1.f);
+        stateVariableFilter.setCutoffFrequency (20000.f);
+        stateVariableFilter.setResonance (1.f);
+        outputGainProcessor.setGainDecibels (0.f);
+        
     }
     
-    ~AteAlgorithm ()
+    ~AteAlgorithm () override
     {
         jassert (&dspParameters);
         dspParameters.RemoveParameterListener (this);
@@ -62,6 +71,8 @@ public:
     
     void process (juce::AudioBuffer<float>& AudioBuffer, juce::MidiBuffer& MidiMessages)
     {
+        juce::ignoreUnused (MidiMessages);
+        
         const auto numberOfChannels = AudioBuffer.getNumChannels();
         const auto numberOfSamples = AudioBuffer.getNumSamples();
         

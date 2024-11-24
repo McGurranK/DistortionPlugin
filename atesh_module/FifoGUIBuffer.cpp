@@ -2,14 +2,12 @@
 * AteshFiFo.cpp
 */
 
-AteshFiFo::AteshFiFo (int BufferSize, unsigned int NumberOfChannels)
+AteshFiFo::AteshFiFo (int BufferSize, int NumberOfChannels)
     : internalSamplesBuffer (NumberOfChannels, BufferSize)
 {
     // Check you have set channelNumber of NumberOfSamples correctly
     jassert (BufferSize > NumberOfChannels);
     
-    samplesBuffer.resize (BufferSize);
-    samplesBuffer.reserve (BufferSize);
     readAndWriteIndex.setTotalSize (BufferSize);
 }
     
@@ -17,7 +15,6 @@ void AteshFiFo::setAtomicFlag (bool StartDrawing)
 {
     if (StartDrawing)
     {
-        std::fill (samplesBuffer.begin(), samplesBuffer.end(), 0.f);
         internalSamplesBuffer.clear();
         readAndWriteIndex.reset();
     }
@@ -70,6 +67,8 @@ int AteshFiFo::readFromFiFo (juce::AudioBuffer<float>& AudioBuffer)
 }
 
 #ifdef UnitTesting
+
+// Todo : Unit test this fifo
 
 class UnitTestingAteshFifo final : public juce::UnitTest
 {
