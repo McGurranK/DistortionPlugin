@@ -15,7 +15,6 @@ void AteshFiFo::setAtomicFlag (bool StartDrawing)
 {
     if (StartDrawing)
     {
-        std::fill (samplesBuffer.begin(), samplesBuffer.end(), 0.f);
         internalSamplesBuffer.clear();
         readAndWriteIndex.reset();
     }
@@ -68,6 +67,8 @@ int AteshFiFo::readFromFiFo (juce::AudioBuffer<float>& AudioBuffer)
 }
 
 #ifdef UnitTesting
+
+// Todo : Unit test this fifo
 
 class UnitTestingAteshFifo final : public juce::UnitTest
 {
