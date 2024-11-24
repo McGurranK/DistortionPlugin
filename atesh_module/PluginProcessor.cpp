@@ -64,7 +64,7 @@ void AteshAudioProcessor::changeProgramName (int , const juce::String&)
 //==============================================================================
 void AteshAudioProcessor::prepareToPlay (double sampleRate, int maximumExpectedSamplesPerBlock)
 {
-    dspAlgorithm.prepare (sampleRate, maximumExpectedSamplesPerBlock, getTotalNumOutputChannels());
+    dspAlgorithm.prepare (sampleRate, static_cast<unsigned int> (maximumExpectedSamplesPerBlock), static_cast<unsigned int> (getTotalNumOutputChannels()));
 }
 
 void AteshAudioProcessor::releaseResources()

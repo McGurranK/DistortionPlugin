@@ -18,6 +18,11 @@ public:
         startTimer (10);
     }
     
+    ~ComponentMover() override
+    {
+        stopTimer();
+    }
+    
     void timerCallback() final
     {
         const auto xPos = JUCE_LIVE_CONSTANT (JuceComponent::getX());
@@ -27,4 +32,6 @@ public:
         
         JuceComponent::setBounds (xPos, yPos, width, height);
     }
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComponentMover)
 };

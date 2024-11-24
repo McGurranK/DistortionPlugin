@@ -14,7 +14,7 @@
 class AteshFiFo final
 {
 public:
-    AteshFiFo (int BufferSize, unsigned int NumberOfChannels);
+    AteshFiFo (int BufferSize, int NumberOfChannels);
     
     void setAtomicFlag (bool StartDrawing);
     

@@ -65,7 +65,7 @@ void WaveformVisualiser::paint (juce::Graphics& GraphicsRef)
                 {
                     juce::Line<float> closingLine { previousPosition,  {static_cast<float>(getWidth()), static_cast<float> (getHeight() * 0.5)  }};
                     waveFormPath.addLineSegment (closingLine, 1.f);
-                    previousPosition.setXY (getWidth(), getHeight() * 0.5);
+                    previousPosition.setXY (getWidth(), getHeight() * 0.5f);
                 }
             }
         }

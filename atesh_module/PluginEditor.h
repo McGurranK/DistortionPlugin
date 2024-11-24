@@ -16,7 +16,7 @@ public:
 private:
     AtesLookAndFeel atesLookAndFeel;
     
-    ComponentMover<RotaryDefault> gainSlider;
+    RotaryDefault gainSlider;
     RotaryDefault mixSlider;
     
     RotaryDefault outputGainSlider;
@@ -43,5 +43,6 @@ private:
     juce::Label pluginName {"Atesh", "Atesh"};
 
     AteshAudioProcessor& audioProcessor;
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioEditor);
+    
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AteshAudioEditor)
 };

@@ -2,14 +2,12 @@
 * AteshFiFo.cpp
 */
 
-AteshFiFo::AteshFiFo (int BufferSize, unsigned int NumberOfChannels)
+AteshFiFo::AteshFiFo (int BufferSize, int NumberOfChannels)
     : internalSamplesBuffer (NumberOfChannels, BufferSize)
 {
     // Check you have set channelNumber of NumberOfSamples correctly
     jassert (BufferSize > NumberOfChannels);
     
-    samplesBuffer.resize (BufferSize);
-    samplesBuffer.reserve (BufferSize);
     readAndWriteIndex.setTotalSize (BufferSize);
 }
     
